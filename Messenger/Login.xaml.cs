@@ -65,11 +65,11 @@ namespace Messenger
                     LoginButton.IsEnabled = false;
                     LoginButton.Content = "Проверка сохраненной сессии...";
 
-                    bool loginSuccess = await AuthenticateWithToken(savedToken);
-                    if (loginSuccess)
+                    User user = await AuthenticateWithToken(savedToken);
+                    if (user != null)
                     {
                         // Token is valid, proceed to main window
-                        MainWindow mainWindow = new MainWindow();
+                        MainWindow mainWindow = new MainWindow(savedToken, user.Username);
                         mainWindow.Show();
                         this.Close();
                         return;
@@ -93,7 +93,7 @@ namespace Messenger
             }
         }
 
-        private async Task<bool> AuthenticateWithToken(string sessionToken)
+        private async Task<User> AuthenticateWithToken(string sessionToken)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace Messenger
                 if (string.IsNullOrWhiteSpace(sessionToken))
                 {
                     System.Diagnostics.Debug.WriteLine("AuthenticateWithToken: Session token is null or empty");
-                    return false;
+                    return null;
                 }
 
                 var tokenAuth = new TokenAuth { SessionToken = sessionToken };
@@ -126,7 +126,7 @@ namespace Messenger
                     if (string.IsNullOrWhiteSpace(user.sessionToken))
                     {
                         System.Diagnostics.Debug.WriteLine("Server returned empty session token");
-                        return false;
+                        return null;
                     }
 
                     // Store session data globally
@@ -139,15 +139,15 @@ namespace Messenger
                         SaveSessionToken(user.sessionToken);
                     }
 
-                    return true;
+                    return user;
                 }
 
-                return false;
+                return null;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in AuthenticateWithToken: {ex.Message}");
-                return false;
+                return null;
             }
         }
 
@@ -317,7 +317,7 @@ namespace Messenger
                         MessageBoxButton.OK, MessageBoxImage.Information);
 
                     // Open MainWindow
-                    MainWindow mainWindow = new MainWindow();
+                    MainWindow mainWindow = new MainWindow(userData.sessionToken, userData.Username);
                     mainWindow.Show();
                     this.Close();
                 }

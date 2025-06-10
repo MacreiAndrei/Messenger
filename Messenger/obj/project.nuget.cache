@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "0Am3OlN3tc8=",
+  "dgSpecHash": "wVuGPis3hOg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Messenger.csproj",
+  "projectFilePath": "C:\\Users\\alex\\Desktop\\Messenger\\Messenger\\Messenger.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Trox\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+    "C:\\Users\\alex\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
   ],
   "logs": []
 }

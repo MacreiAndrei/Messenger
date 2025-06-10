@@ -18,9 +18,13 @@ namespace Messenger
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public string _userToken;
+        public string _username;
+        public MainWindow(string userToken, string username)
         {
             InitializeComponent();
+            _userToken = userToken;
+            _username = username;
             SetActiveButton(HomeButton);
             ShowView("Home");
         }
@@ -70,7 +74,7 @@ namespace Messenger
             UserControl view = viewName switch
             {
                 "Home" => new Views.HomeView(),
-                "Chat" => new Views.ChatView(),
+                "Chat" => new Views.ChatView(_userToken, _username),
                 "Notifications" => new Views.NotificationsView(),
                 "Settings" => new Views.SettingsView(),
                 _ => null

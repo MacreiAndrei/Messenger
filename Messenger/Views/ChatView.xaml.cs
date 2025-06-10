@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace Messenger.Views
 {
@@ -25,12 +26,17 @@ namespace Messenger.Views
         private string sessionToken;
         private HttpClient httpClient;
         private DispatcherTimer messagePollingTimer;
+        private string _userToken;
+        private string _username;
 
-        public ChatView()
+        public ChatView(string sessionToken, string username)
         {
             InitializeComponent();
             InitializeHttpClient();
             InitializeMessagePolling();
+            _userToken = sessionToken;
+            _username = username;
+            SetSessionToken(_userToken);
         }
 
         private void InitializeHttpClient()
@@ -45,16 +51,16 @@ namespace Messenger.Views
             };
 
             httpClient = new HttpClient(clientHandler);
-            httpClient.BaseAddress = new Uri("https://172.16.0.86:5172");
-            // Don't add Content-Type to default headers - it goes with each request's content
+            httpClient.BaseAddress = new Uri("https://localhost:5171");
         }
 
         private void InitializeMessagePolling()
         {
             messagePollingTimer = new DispatcherTimer();
-            messagePollingTimer.Interval = TimeSpan.FromSeconds(2); // Poll every 2 seconds
+            messagePollingTimer.Interval = TimeSpan.FromSeconds(0.5);
             messagePollingTimer.Tick += async (s, e) => await PollForNewMessages();
         }
+
 
         public void SetSessionToken(string token)
         {
@@ -79,9 +85,12 @@ namespace Messenger.Views
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var chats = JsonConvert.DeserializeObject<List<ChatInfo>>(responseContent);
-
-                    PopulateContactsList(chats);
+                    var chats = JsonConvert.DeserializeObject<ChatInfoResponse>(responseContent);
+                    foreach(var chat in chats.data)
+                    {
+                        Debug.WriteLine(chat.ChatName);
+                    }
+                    PopulateContactsList(chats.data);
                 }
             }
             catch (Exception ex)
@@ -241,7 +250,7 @@ namespace Messenger.Views
         {
             try
             {
-                var requestData = new
+                var requestData = new MessageType2
                 {
                     SessionToken = sessionToken,
                     ChatID = chatId
@@ -255,9 +264,30 @@ namespace Messenger.Views
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var messages = JsonConvert.DeserializeObject<List<MessageInfo>>(responseContent);
+                    var responseData = JsonConvert.DeserializeObject<ServerMessageResponse>(responseContent);
 
-                    DisplayMessages(messages);
+                    if (responseData.status == "success")
+                    {
+                        var messages = responseData.data.messages.Select(m => new MessageInfo
+                        {
+                            MessageID = m.MessageID.ToString(),
+                            Content = m.Content,
+                            SenderUsername = m.Sender.Username,
+                            Timestamp = m.TimeStamp,
+                            ChatID = m.ChatID.ToString()
+                        }).ToList();
+
+                        DisplayMessages(messages);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Error: {responseData.error}");
+                    }
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Error loading messages: {errorContent}");
                 }
             }
             catch (Exception ex)
@@ -273,7 +303,7 @@ namespace Messenger.Views
 
             try
             {
-                var requestData = new
+                var requestData = new MessageType2
                 {
                     SessionToken = sessionToken,
                     ChatID = currentChatId
@@ -287,25 +317,49 @@ namespace Messenger.Views
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var newMessages = JsonConvert.DeserializeObject<List<MessageInfo>>(responseContent);
+                    var responseData = JsonConvert.DeserializeObject<ServerMessageResponse>(responseContent);
 
-                    if (newMessages?.Count > 0)
+                    if (responseData.status == "success" && responseData.data.messages?.Count > 0)
                     {
+                        // Получаем ID последнего сообщения (если есть)
+                        var lastMessageId = MessagesPanel.Children.Count > 0 ?
+                            (MessagesPanel.Children[MessagesPanel.Children.Count - 1] as FrameworkElement)?.Tag?.ToString() : null;
+
+                        var newMessages = responseData.data.messages
+                            .Where(m => lastMessageId == null || m.MessageID.ToString() != lastMessageId)
+                            .Select(m => new MessageInfo
+                            {
+                                MessageID = m.MessageID.ToString(),
+                                Content = m.Content,
+                                SenderUsername = m.Sender.Username,
+                                Timestamp = m.TimeStamp,
+                                ChatID = m.ChatID.ToString()
+                            }).ToList();
+
                         foreach (var message in newMessages)
                         {
                             AddMessageToUI(message);
                         }
 
-                        MessagesScrollViewer.ScrollToBottom();
+                        if (newMessages.Count > 0)
+                        {
+                            MessagesScrollViewer.ScrollToBottom();
+                        }
                     }
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine($"Error polling new messages: {errorContent}");
                 }
             }
             catch (Exception ex)
             {
-                // Silently handle polling errors to avoid spam
-                System.Diagnostics.Debug.WriteLine($"Polling error: {ex.Message}");
+                Debug.WriteLine($"Polling error: {ex.Message}");
             }
         }
+
+
 
         private void DisplayMessages(List<MessageInfo> messages)
         {
@@ -322,13 +376,23 @@ namespace Messenger.Views
 
         private void AddMessageToUI(MessageInfo message)
         {
+            // Проверяем, не было ли уже добавлено это сообщение
+            foreach (var child in MessagesPanel.Children)
+            {
+                if (child is FrameworkElement element && element.Tag?.ToString() == message.MessageID)
+                {
+                    return; // Сообщение уже есть в чате
+                }
+            }
+
             // Determine if message is from current user (this would need proper implementation)
             bool isMyMessage = message.SenderUsername == "alice"; // This should be dynamic
 
             var messageBorder = new Border
             {
                 Style = (Style)FindResource(isMyMessage ? "MyMessageStyle" : "OtherMessageStyle"),
-                Margin = new Thickness(0, 0, 0, 8)
+                Margin = new Thickness(0, 0, 0, 8),
+                Tag = message.MessageID // Сохраняем ID сообщения для проверки дубликатов
             };
 
             var messagePanel = new StackPanel();
@@ -372,7 +436,6 @@ namespace Messenger.Views
             messageBorder.Child = messagePanel;
             MessagesPanel.Children.Add(messageBorder);
         }
-
         private void AddMessage(string messageText, bool isMyMessage)
         {
             var messageBorder = new Border
@@ -485,11 +548,54 @@ namespace Messenger.Views
     }
 
     // Data models
+
+    public class MessageType2
+    {
+        public string SessionToken { get; set; }
+        public string ChatID { get; set; }
+    }
+
+    public class ServerMessageResponse
+    {
+        public string status { get; set; }
+        public string error { get; set; }
+        public MessageData data { get; set; }
+    }
+
+    public class MessageData
+    {
+        public List<ServerMessage> messages { get; set; }
+    }
+
+    public class ServerMessage
+    {
+        public int MessageID { get; set; }
+        public int UserID { get; set; }
+        public string Content { get; set; }
+        public DateTime TimeStamp { get; set; }
+        public int ChatID { get; set; }
+        public bool IsSeen { get; set; }
+        public bool IsFile { get; set; }
+        public MessageSender Sender { get; set; }
+    }
+
+    public class MessageSender
+    {
+        public int UserID { get; set; }
+        public string Username { get; set; }
+        public string UserProfilePicturePath { get; set; }
+    }
+
+    public class ChatInfoResponse
+    {
+        public string status { get; set; }
+        public List<ChatInfo> data { get; set; }
+    }
+
     public class ChatInfo
     {
         public string ChatID { get; set; }
         public string ChatName { get; set; }
-        public List<string> Members { get; set; }
     }
 
     public class MessageInfo
