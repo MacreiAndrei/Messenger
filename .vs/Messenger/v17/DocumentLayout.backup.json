@@ -1,0 +1,252 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Trox\\Desktop\\Messenger\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\views\\settingsview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\views\\settingsview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\views\\settingsview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\views\\settingsview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\models\\sessionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\models\\sessionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\login.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\login.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\login.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\login.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\register.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\register.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\register.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\register.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\session_token.dat||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\session_token.dat||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\obj\\Debug\\net9.0-windows\\App.g.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Messenger\\obj\\Debug\\net9.0-windows\\App.g.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\views\\chatview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\views\\chatview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\views\\chatview.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\views\\chatview.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\trox\\desktop\\messenger\\messenger\\apiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\apiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SessionManager.cs",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Models\\SessionManager.cs",
+              "RelativeDocumentMoniker": "Messenger\\Models\\SessionManager.cs",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Models\\SessionManager.cs",
+              "RelativeToolTip": "Messenger\\Models\\SessionManager.cs",
+              "ViewState": "AgIAALkAAAAAAAAAAAAkwEUBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T08:58:57.232Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SettingsView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Views\\SettingsView.xaml.cs",
+              "RelativeDocumentMoniker": "Messenger\\Views\\SettingsView.xaml.cs",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Views\\SettingsView.xaml.cs",
+              "RelativeToolTip": "Messenger\\Views\\SettingsView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T08:58:39.514Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SettingsView.xaml",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Views\\SettingsView.xaml",
+              "RelativeDocumentMoniker": "Messenger\\Views\\SettingsView.xaml",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Views\\SettingsView.xaml",
+              "RelativeToolTip": "Messenger\\Views\\SettingsView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-06-10T08:56:50.972Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\App.xaml",
+              "RelativeDocumentMoniker": "Messenger\\App.xaml",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\App.xaml",
+              "RelativeToolTip": "Messenger\\App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-06-10T08:55:35.329Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Login.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Login.xaml.cs",
+              "RelativeDocumentMoniker": "Messenger\\Login.xaml.cs",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Login.xaml.cs",
+              "RelativeToolTip": "Messenger\\Login.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T08:55:32.955Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Login.xaml",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Login.xaml",
+              "RelativeDocumentMoniker": "Messenger\\Login.xaml",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Login.xaml",
+              "RelativeToolTip": "Messenger\\Login.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-06-10T08:55:31.083Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Register.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Register.xaml.cs",
+              "RelativeDocumentMoniker": "Messenger\\Register.xaml.cs",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Register.xaml.cs",
+              "RelativeToolTip": "Messenger\\Register.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T08:55:29.225Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Register.xaml",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Register.xaml",
+              "RelativeDocumentMoniker": "Messenger\\Register.xaml",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Register.xaml",
+              "RelativeToolTip": "Messenger\\Register.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-06-10T08:55:26.1Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "session_token.dat",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\session_token.dat",
+              "RelativeDocumentMoniker": "Messenger\\session_token.dat",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\session_token.dat",
+              "RelativeToolTip": "Messenger\\session_token.dat",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-06-10T08:55:25.036Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "App.g.cs",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\obj\\Debug\\net9.0-windows\\App.g.cs",
+              "RelativeDocumentMoniker": "Messenger\\obj\\Debug\\net9.0-windows\\App.g.cs",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\obj\\Debug\\net9.0-windows\\App.g.cs",
+              "RelativeToolTip": "Messenger\\obj\\Debug\\net9.0-windows\\App.g.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T08:54:13.791Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ApiConfig.cs",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\ApiConfig.cs",
+              "RelativeDocumentMoniker": "Messenger\\ApiConfig.cs",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\ApiConfig.cs",
+              "RelativeToolTip": "Messenger\\ApiConfig.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAADwvyMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T08:30:54.81Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ChatView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Views\\ChatView.xaml.cs",
+              "RelativeDocumentMoniker": "Messenger\\Views\\ChatView.xaml.cs",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Views\\ChatView.xaml.cs",
+              "RelativeToolTip": "Messenger\\Views\\ChatView.xaml.cs",
+              "ViewState": "AgIAANQBAAAAAAAAAAAcwPABAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T08:30:09.544Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ChatView.xaml",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Views\\ChatView.xaml",
+              "RelativeDocumentMoniker": "Messenger\\Views\\ChatView.xaml",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Views\\ChatView.xaml",
+              "RelativeToolTip": "Messenger\\Views\\ChatView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-06-10T08:11:47.24Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Views\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "Messenger\\Views\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\Trox\\Desktop\\Messenger\\Messenger\\Views\\MainWindow.xaml",
+              "RelativeToolTip": "Messenger\\Views\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-06-10T08:06:12.441Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

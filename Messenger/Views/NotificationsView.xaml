@@ -1,0 +1,264 @@
+﻿<UserControl x:Class="Messenger.Views.NotificationsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Messenger.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="NotificationItemStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#D1D5DB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="UnreadNotificationStyle" BasedOn="{StaticResource NotificationItemStyle}" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#8B5CF6"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+
+        <!-- Custom Button Style with Rounded Corners -->
+        <Style x:Key="RoundedButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#7C3AED"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#6D28D9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Filter Button Style -->
+        <Style x:Key="FilterButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F3F4F6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#F8F9FA">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="White" Padding="30,20" 
+                BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Notificări" FontSize="32" FontWeight="Bold" 
+                               Foreground="#1F2937" Margin="0,0,0,5"/>
+                    <TextBlock Text="Rămii la curent cu toate activitățile" 
+                               FontSize="16" Foreground="#6B7280"/>
+                </StackPanel>
+
+                <Button Grid.Column="1" Content="Marchează toate ca citite" 
+                        Background="#8B5CF6" Foreground="White" 
+                        Padding="15,8" BorderThickness="0"
+                        FontSize="14" FontWeight="SemiBold" Cursor="Hand"
+                        Style="{StaticResource RoundedButtonStyle}"
+                        Click="MarkAllAsRead_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- Lista de notificări -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="30">
+            <StackPanel MaxWidth="800">
+
+                <!-- Filtru -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <TextBlock Text="Filtrează:" FontSize="14" Foreground="#6B7280" 
+                               VerticalAlignment="Center" Margin="0,0,15,0"/>
+
+                    <Button x:Name="AllFilter" Content="Toate" Background="#8B5CF6" 
+                            Foreground="White" Padding="12,6" BorderThickness="0" 
+                            FontSize="12" Margin="0,0,10,0" 
+                            Style="{StaticResource FilterButtonStyle}"
+                            Click="AllFilter_Click" Cursor="Hand"/>
+
+                    <Button x:Name="UnreadFilter" Content="Necitite" Background="Transparent" 
+                            Foreground="#6B7280" Padding="12,6" BorderThickness="1" 
+                            BorderBrush="#D1D5DB" FontSize="12" 
+                            Style="{StaticResource FilterButtonStyle}"
+                            Margin="0,0,10,0" Click="UnreadFilter_Click" Cursor="Hand"/>
+
+                    <Button x:Name="MessagesFilter" Content="Mesaje" Background="Transparent" 
+                            Foreground="#6B7280" Padding="12,6" BorderThickness="1" 
+                            BorderBrush="#D1D5DB" FontSize="12" 
+                            Style="{StaticResource FilterButtonStyle}"
+                            Click="MessagesFilter_Click" Cursor="Hand"/>
+                </StackPanel>
+
+                <!-- Container pentru notificări -->
+                <StackPanel x:Name="NotificationsContainer">
+
+                    <!-- Notificare nouă necitită -->
+                    <Border Style="{StaticResource UnreadNotificationStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Width="40" Height="40" 
+                                    CornerRadius="20" Background="#8B5CF6">
+                                <Path Data="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" 
+                                      Fill="White" Stretch="Uniform" Width="20" Height="20"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Mesaj nou de la Anil" 
+                                               FontSize="16" FontWeight="SemiBold" 
+                                               Foreground="#1F2937"/>
+                                    <Ellipse Grid.Column="1" Width="8" Height="8" 
+                                             Fill="#8B5CF6" Margin="10,0,0,0"/>
+                                </Grid>
+
+                                <TextBlock Text="I am doing well, Can we meet tomorrow?" 
+                                           FontSize="14" Foreground="#6B7280" 
+                                           Margin="0,5,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="2" Text="acum 5 min" 
+                                       FontSize="12" Foreground="#9CA3AF" 
+                                       VerticalAlignment="Top"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Restul notificărilor... (păstrăm doar câteva exemple) -->
+                    <Border Style="{StaticResource NotificationItemStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Width="40" Height="40" 
+                                    CornerRadius="20" Background="#F59E0B">
+                                <TextBlock Text="FF" FontSize="12" FontWeight="Bold" 
+                                           Foreground="White" HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"/>
+                            </Border>
+
+                            <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                                <TextBlock Text="Activitate în Friends Forever" 
+                                           FontSize="16" FontWeight="SemiBold" 
+                                           Foreground="#1F2937"/>
+                                <TextBlock Text="3 mesaje noi în grup" 
+                                           FontSize="14" Foreground="#6B7280" 
+                                           Margin="0,5,0,0"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="2" Text="azi, 9:52 PM" 
+                                       FontSize="12" Foreground="#9CA3AF" 
+                                       VerticalAlignment="Top"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource NotificationItemStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Width="40" Height="40" 
+                                    CornerRadius="20" Background="#10B981">
+                                <Path Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" 
+                                      Fill="White" Stretch="Uniform" Width="20" Height="20"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                                <TextBlock Text="Backup completat cu succes" 
+                                           FontSize="16" FontWeight="SemiBold" 
+                                           Foreground="#1F2937"/>
+                                <TextBlock Text="Toate conversațiile tale au fost salvate automat" 
+                                           FontSize="14" Foreground="#6B7280" 
+                                           Margin="0,5,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="2" Text="ieri, 3:20 AM" 
+                                       FontSize="12" Foreground="#9CA3AF" 
+                                       VerticalAlignment="Top"/>
+                        </Grid>
+                    </Border>
+
+                </StackPanel>
+
+                <!-- Mesaj când nu sunt notificări -->
+                <Border x:Name="EmptyNotifications" Visibility="Collapsed" 
+                        Background="White" CornerRadius="12" Padding="40" 
+                        BorderBrush="#E5E7EB" BorderThickness="1">
+                    <StackPanel HorizontalAlignment="Center">
+                        <Path Data="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" 
+                              Fill="#D1D5DB" Stretch="Uniform" Width="60" Height="60" 
+                              Margin="0,0,0,20"/>
+                        <TextBlock Text="Nu ai notificări noi" FontSize="20" FontWeight="SemiBold" 
+                                   Foreground="#6B7280" Margin="0,0,0,10"/>
+                        <TextBlock Text="Când vei primi mesaje noi sau alte actualizări, le vei vedea aici" 
+                                   FontSize="14" Foreground="#9CA3AF" TextAlignment="Center" 
+                                   MaxWidth="300" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
