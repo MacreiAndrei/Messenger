@@ -1,23 +1,12 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Messenger.Views
 {
@@ -64,7 +53,7 @@ namespace Messenger.Views
             messagePollingTimer.Tick += async (s, e) => await PollForNewEditedMessages();
         }
 
-       
+
         public void SetSessionToken(string token)
         {
             sessionToken = token;
@@ -89,7 +78,7 @@ namespace Messenger.Views
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var chats = JsonConvert.DeserializeObject<ChatInfoResponse>(responseContent);
-                    foreach(var chat in chats.data)
+                    foreach (var chat in chats.data)
                     {
                         Debug.WriteLine(chat.ChatName);
                     }
@@ -324,6 +313,55 @@ namespace Messenger.Views
         }
         private async Task PollForNewEditedMessages()
         {
+
+                var requestData = new MessageType2
+                {
+                    SessionToken = sessionToken,
+                    ChatID = currentChatId
+                };
+
+                var json = JsonConvert.SerializeObject(requestData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync("Message/get-updated-messages", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseData = JsonConvert.DeserializeObject<ServerMessagesResponse>(responseContent);
+
+                        Debug.WriteLine(responseData.data.messages?.Count);
+                    if (responseData.status == "success" && responseData.data.messages?.Count > 0)
+                    {
+                        foreach (var message in responseData.data.messages)
+                        {
+                            foreach (var child in MessagesPanel.Children)
+                            {
+                                if (child is Border border && border.Tag?.ToString() == message.messageID.ToString())
+                                {
+                                    if (border.Child is StackPanel panel)
+                                    {
+                                        foreach (var item in panel.Children)
+                                        {
+                                            if (item is TextBlock textBlock &&
+                                                textBlock.FontSize == 14)
+                                            {
+                                                textBlock.Text = message.content;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Error polling new messages: {errorContent}");
+                }
 
         }
 
@@ -601,7 +639,7 @@ namespace Messenger.Views
                             }
                             break;
                         }
-                    }    
+                    }
                 }
                 else
                 {
@@ -676,7 +714,7 @@ namespace Messenger.Views
 
         private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrWhiteSpace(SearchTextBox.Text))
+            if (string.IsNullOrWhiteSpace(SearchTextBox.Text))
                 SearchTextBox.Text = "Create new chat...";
         }
 
@@ -881,6 +919,8 @@ namespace Messenger.Views
         public int chatID { get; set; }
         public bool isSeen { get; set; }
         public bool isFile { get; set; }
+        public bool isDeleted { get; set; }
+        public bool isModified { get; set; }
         public MessageSender sender { get; set; }
     }
 
