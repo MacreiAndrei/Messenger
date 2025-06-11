@@ -519,7 +519,7 @@ namespace Messenger.Views
                         var tempMessage = new MessageInfo
                         {
                             Content = messageContent,
-                            SenderUsername = "alice", // This should be the current user
+                            SenderUsername = _username, // This should be the current user
                             Timestamp = DateTime.Now
                         };
                         AddMessageToUI(tempMessage);
