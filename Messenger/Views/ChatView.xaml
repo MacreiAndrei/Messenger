@@ -455,41 +455,7 @@
                                        Foreground="#64748b" HorizontalAlignment="Center"/>
                         </Border>
 
-                        <!-- Mesaj primit -->
-                        <Border Style="{StaticResource OtherMessageStyle}">
-                            <TextBlock Text="Hey There! 👋" FontSize="15" 
-                                       Foreground="#1e293b" TextWrapping="Wrap"/>
-                        </Border>
-
-                        <!-- Mesaj primit -->
-                        <Border Style="{StaticResource OtherMessageStyle}">
-                            <TextBlock Text="How are you doing today?" FontSize="15" 
-                                       Foreground="#1e293b" TextWrapping="Wrap"/>
-                        </Border>
-
-                        <!-- Mesaj trimis -->
-                        <Border Style="{StaticResource MyMessageStyle}">
-                            <TextBlock Text="Hello! 😊" FontSize="15" 
-                                       Foreground="White" TextWrapping="Wrap"/>
-                        </Border>
-
-                        <!-- Mesaj trimis -->
-                        <Border Style="{StaticResource MyMessageStyle}">
-                            <TextBlock Text="I am fine and how are you? Thanks for asking!" FontSize="15" 
-                                       Foreground="White" TextWrapping="Wrap"/>
-                        </Border>
-
-                        <!-- Mesaj primit -->
-                        <Border Style="{StaticResource OtherMessageStyle}">
-                            <TextBlock Text="I am doing well, Can we meet tomorrow? I have something exciting to share! 🎉" FontSize="15" 
-                                       Foreground="#1e293b" TextWrapping="Wrap"/>
-                        </Border>
-
-                        <!-- Mesaj trimis -->
-                        <Border Style="{StaticResource MyMessageStyle}">
-                            <TextBlock Text="Yes Sure! Looking forward to it! ✨" FontSize="15" 
-                                       Foreground="White" TextWrapping="Wrap"/>
-                        </Border>
+                        
 
                         <!-- Status indicator pentru ultimul mesaj -->
                         <StackPanel HorizontalAlignment="Right" Margin="0,5,20,20">

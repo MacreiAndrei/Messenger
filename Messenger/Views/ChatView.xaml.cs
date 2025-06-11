@@ -507,7 +507,58 @@ namespace Messenger.Views
         }
         public async void EditMessage(MessageInfo message)
         {
+            try
+            {
+                var requestData = new
+                {
+                    SessionToken = sessionToken,
+                    MessageID = message.MessageID,
+                    Content = MessageTextBox.Text,
+                };
+                Debug.Write(message.MessageID);
+                var json = JsonConvert.SerializeObject(requestData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
 
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Put,
+                    RequestUri = new Uri(httpClient.BaseAddress + "Message/message-update"),
+                    Content = content
+                };
+
+                var response = await httpClient.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    foreach (var child in MessagesPanel.Children)
+                    {
+                        if (child is Border border && border.Tag?.ToString() == message.MessageID)
+                        {
+                            if (border.Child is StackPanel panel)
+                            {
+                                foreach (var item in panel.Children)
+                                {
+                                    if (item is TextBlock textBlock &&
+                                        textBlock.FontSize == 14)
+                                    {
+                                        textBlock.Text = MessageTextBox.Text;
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }    
+                }
+                else
+                {
+                    MessageBox.Show("Failed to update message.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error sending message: {ex.Message}");
+            }
         }
 
         public async void DeleteMessage(MessageInfo message)
