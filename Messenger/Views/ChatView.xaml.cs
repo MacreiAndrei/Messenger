@@ -112,7 +112,7 @@ namespace Messenger.Views
         {
             var border = new Border
             {
-                Tag = chat.ChatID,
+                Tag = chat.ChatID + " " + chat.ChatName,
                 Background = Brushes.Transparent,
                 Padding = new Thickness(12),
                 Margin = new Thickness(0, 0, 0, 8),
@@ -206,16 +206,16 @@ namespace Messenger.Views
         private async void Contact_Click(object sender, MouseButtonEventArgs e)
         {
             var border = sender as Border;
-            var chatId = border?.Tag?.ToString();
+            var chatId = border?.Tag?.ToString().Split(" ")[0];
+            var chatName = border?.Tag?.ToString().Split(" ")[1];
 
-            if (!string.IsNullOrEmpty(chatId))
+            if (!string.IsNullOrEmpty(chatId) && !string.IsNullOrEmpty(chatName))
             {
                 currentChatId = chatId;
-
                 EmptyState.Visibility = Visibility.Collapsed;
                 ChatArea.Visibility = Visibility.Visible;
 
-                await UpdateChatHeader(chatId);
+                await UpdateChatHeader(chatName);
 
                 await LoadMessagesForChat(chatId);
 
@@ -225,11 +225,11 @@ namespace Messenger.Views
             }
         }
 
-        private async Task UpdateChatHeader(string chatId)
+        private async Task UpdateChatHeader(string chatName)
         {
-            ChatContactName.Text = $"Chat {chatId}";
+            ChatContactName.Text = $"Chat {chatName}";
             ChatContactStatus.Text = "Online";
-            ChatAvatarText.Text = chatId.Substring(0, 1);
+            ChatAvatarText.Text = chatName.Substring(0, 1);
             ChatAvatar.Background = new SolidColorBrush(Color.FromRgb(139, 92, 246));
             ChatOnlineStatus.Fill = new SolidColorBrush(Color.FromRgb(16, 185, 129));
             ChatOnlineStatus.Visibility = Visibility.Visible;
