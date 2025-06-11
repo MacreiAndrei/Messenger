@@ -49,15 +49,15 @@ namespace Messenger.Models
                 // Сохраняем данные пользователя (без пароля)
                 var userDataToSave = new User
                 {
-                    UserID = user.UserID,
+                    userID = user.userID,
                     username = user.username,
-                    Email = user.Email,
-                    IsOnline = user.IsOnline,
-                    IsAccountDeleted = user.IsAccountDeleted,
-                    LastTimeOnline = user.LastTimeOnline,
+                    email = user.email,
+                    isOnline = user.isOnline,
+                    isAccountDeleted = user.isAccountDeleted,
+                    lastTimeOnline = user.lastTimeOnline,
                     sessionToken = user.sessionToken,
-                    SessionTokenExpirationDate = user.SessionTokenExpirationDate,
-                    UserProfilePicturePath = user.UserProfilePicturePath
+                    sessionTokenExpirationDate = user.sessionTokenExpirationDate,
+                    userProfilePicturePath = user.userProfilePicturePath
                 };
 
                 string userJson = JsonSerializer.Serialize(userDataToSave);
@@ -303,7 +303,7 @@ namespace Messenger.Models
             if (user == null)
                 return true;
 
-            return DateTime.Now >= user.SessionTokenExpirationDate;
+            return DateTime.Now >= user.sessionTokenExpirationDate;
         }
 
         /// <summary>

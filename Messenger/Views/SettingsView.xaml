@@ -212,6 +212,42 @@
             </Setter>
         </Style>
 
+        <Style x:Key="ModernPasswordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="Background" Value="#F9FAFB"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border x:Name="Border" 
+                         Background="{TemplateBinding Background}"
+                         BorderBrush="{TemplateBinding BorderBrush}"
+                         BorderThickness="{TemplateBinding BorderThickness}">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="8"/>
+                                </Style>
+                            </Border.Style>
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                 Margin="{TemplateBinding Padding}"
+                                 VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#8B5CF6"/>
+                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#C4B5FD"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Modern RadioButton Style -->
         <Style x:Key="ModernRadioButtonStyle" TargetType="RadioButton">
             <Setter Property="Foreground" Value="#374151"/>
@@ -339,17 +375,31 @@
                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                 <TextBlock Text="Nume" FontSize="14" FontWeight="Medium"
                                            Foreground="#6B7280" Margin="0,0,0,6"/>
-                                <TextBox Text="Numele tău" 
-                                         Style="{StaticResource ModernTextBoxStyle}"
-                                         FontSize="16" FontWeight="SemiBold" 
-                                         Margin="0,0,0,16"/>
+                                <DockPanel>
+                                    <Button x:Name="btChangeUsername" Click="btChangeUsername_Click" DockPanel.Dock="Right" Content="Save" 
+                                        Style="{StaticResource PrimaryButtonStyle}"
+                                        Padding="18,10" 
+                                        FontSize="14"
+                                        Margin="16,0,0,16"/>
+                                    <TextBox x:Name="tbChangeUsername" 
+                                             Style="{StaticResource ModernTextBoxStyle}"
+                                             FontSize="16" FontWeight="SemiBold" 
+                                             Margin="0,0,0,16"/>
+                                </DockPanel>
 
                                 <TextBlock Text="Email" FontSize="14" FontWeight="Medium"
                                            Foreground="#6B7280" Margin="0,0,0,6"/>
-                                <TextBox Text="tu@email.com" 
+                                <DockPanel>
+                                    <Button x:Name="btChangeEmail" Click="btChangeEmail_Click" DockPanel.Dock="Right" Content="Save" 
+                                        Style="{StaticResource PrimaryButtonStyle}"
+                                        Padding="18,10" 
+                                        FontSize="14"
+                                        Margin="16,0,0,16"/>
+                                    <TextBox x:Name="tbChangeEmail"
                                          Style="{StaticResource ModernTextBoxStyle}"
-                                         FontSize="16" 
-                                         Margin="0,0,0,20"/>
+                                         FontSize="16" FontWeight="SemiBold" 
+                                         Margin="0,0,0,16"/>
+                                </DockPanel>
 
                                 <Button Content="📷 Schimbă poza de profil" 
                                         Style="{StaticResource SecondaryButtonStyle}"
@@ -448,68 +498,37 @@
                                        Foreground="#1F2937" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <Grid Margin="0,0,0,20">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
 
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Confirmări de citire" 
-                                           FontSize="18" FontWeight="SemiBold" Foreground="#1F2937"/>
-                                <TextBlock Text="Permite altora să vadă când ai citit mesajele lor" 
-                                           FontSize="15" Foreground="#6B7280" Margin="0,4,0,0"/>
-                            </StackPanel>
 
-                            <CheckBox Grid.Column="1" Style="{StaticResource ModernToggleStyle}" 
-                                      IsChecked="True" VerticalAlignment="Center"/>
-                        </Grid>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Password" FontSize="14" FontWeight="Medium"
+                                 Foreground="#6B7280" Margin="0,0,0,6"/>
+                            
+                                <PasswordBox
+                                    x:Name="pbPasswdord1"
+                                   Style="{StaticResource ModernPasswordBoxStyle}"
+                                   FontSize="16" FontWeight="SemiBold" 
+                                   Margin="0,0,0,16"/>
+                            
 
-                        <Grid Margin="0,0,0,20">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Repeat Password" FontSize="14" FontWeight="Medium"
+                                Foreground="#6B7280" Margin="0,0,0,6"/>
 
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Ultima vedere online" 
-                                           FontSize="18" FontWeight="SemiBold" Foreground="#1F2937"/>
-                                <TextBlock Text="Permite altora să vadă când ai fost activ ultima dată" 
-                                           FontSize="15" Foreground="#6B7280" Margin="0,4,0,0"/>
-                            </StackPanel>
-
-                            <CheckBox Grid.Column="1" Style="{StaticResource ModernToggleStyle}" 
-                                      IsChecked="True" VerticalAlignment="Center"/>
-                        </Grid>
-
-                        <Grid Margin="0,0,0,25">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Backup automat" 
-                                           FontSize="18" FontWeight="SemiBold" Foreground="#1F2937"/>
-                                <TextBlock Text="Salvează automat conversațiile în cloud" 
-                                           FontSize="15" Foreground="#6B7280" Margin="0,4,0,0"/>
-                            </StackPanel>
-
-                            <CheckBox Grid.Column="1" Style="{StaticResource ModernToggleStyle}" 
-                                      IsChecked="True" VerticalAlignment="Center"/>
-                        </Grid>
+                            <PasswordBox
+                                    x:Name="pbPasswdord2"
+                                      Style="{StaticResource ModernPasswordBoxStyle}"
+                                      FontSize="16" FontWeight="SemiBold" 
+                                      Margin="0,0,0,16"/>
+                        </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
                             <Button Content="🔑 Schimbă parola" 
                                     Style="{StaticResource SecondaryButtonStyle}"
                                     Padding="18,12" 
                                     FontSize="14" 
-                                    Margin="0,0,16,0"/>
+                                    Margin="0,0,16,0"
+                                    Click="btChangePassword_Click"/>
 
-                            <Button Content="🛡️ Autentificare în doi pași" 
-                                    Style="{StaticResource PrimaryButtonStyle}"
-                                    Padding="18,12" 
-                                    FontSize="14"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>

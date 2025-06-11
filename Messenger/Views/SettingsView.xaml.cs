@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,9 +21,25 @@ namespace Messenger.Views
     /// </summary>
     public partial class SettingsView : UserControl
     {
+        private static HttpClient httpClient;
         public SettingsView()
         {
             InitializeComponent();
+            InitializeHttpClient();
+            tbChangeUsername.Text = App.CurrentUser.username;
+            tbChangeEmail.Text = App.CurrentUser.email;
+        }
+        private void InitializeHttpClient()
+        {
+            var clientHandler = new HttpClientHandler();
+
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+
+            httpClient = new HttpClient(clientHandler);
+            httpClient.BaseAddress = new Uri(ApiConfig.BASE_URL);
         }
 
         private void DeleteAllConversations_Click(object sender, RoutedEventArgs e)
@@ -83,6 +101,210 @@ namespace Messenger.Views
                     Application.Current.Shutdown();
                 }
             }
+        }
+
+        private void btChangeUsername_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeUsername();
+        }
+        private async void ChangeUsername()
+        {
+            if (!string.IsNullOrWhiteSpace(tbChangeUsername.Text))
+            {
+                try
+                {
+                    var requestData = new
+                    {
+                        SessionToken = App.CurrentSessionToken,
+                        NewUserName = tbChangeUsername.Text,
+                    };
+
+                    var json = JsonConvert.SerializeObject(requestData);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var request = new HttpRequestMessage
+                    {
+                        Method = HttpMethod.Put,
+                        RequestUri = new Uri(httpClient.BaseAddress + "User/change-user-name"),
+                        Content = content
+                    };
+
+                    var response = await httpClient.SendAsync(request);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseContent = await response.Content.ReadAsStringAsync();
+                        var responseData = JsonConvert.DeserializeObject<ServerUserResponse>(responseContent);
+
+                        if (responseData.status == "success")
+                        {
+                            tbChangeUsername.Text = responseData.data.user.username;
+                            MessageBox.Show("email changed successfully");
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Error: {responseData.error}");
+                        }
+                    }
+                    else
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show($"Error: {errorContent}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+            else
+            {
+                MessageBox.Show("empty username");
+            }
+        }
+
+        private void btChangeEmail_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeEmail();
+        }
+        private async void ChangeEmail()
+        {
+            if (!string.IsNullOrWhiteSpace(tbChangeEmail.Text))
+            {
+
+                try
+                {
+                    var requestData = new
+                    {
+                        SessionToken = App.CurrentSessionToken,
+                        NewEmail = tbChangeEmail.Text,
+                    };
+
+                    var json = JsonConvert.SerializeObject(requestData);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var request = new HttpRequestMessage
+                    {
+                        Method = HttpMethod.Put,
+                        RequestUri = new Uri(httpClient.BaseAddress + "User/change-user-email"),
+                        Content = content
+                    };
+
+                    var response = await httpClient.SendAsync(request);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseContent = await response.Content.ReadAsStringAsync();
+                        var responseData = JsonConvert.DeserializeObject<ServerUserResponse>(responseContent);
+
+                        if (responseData.status == "success")
+                        {
+                            tbChangeEmail.Text = responseData.data.user.email;
+                            MessageBox.Show("username changed successfully");
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Error: {responseData.error}");
+                        }
+                    }
+                    else
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show($"Error: {errorContent}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("empty email");
+            }
+        }
+        private void btChangePassword_Click(object sender, RoutedEventArgs e)
+        {
+            ChangePassword();
+        }
+        private async void ChangePassword()
+        {
+            if (!string.IsNullOrWhiteSpace(pbPasswdord1.Password) && !string.IsNullOrWhiteSpace(pbPasswdord2.Password) && pbPasswdord1.Password == pbPasswdord2.Password)
+            {
+                try
+                {
+                    var requestData = new
+                    {
+                        SessionToken = App.CurrentSessionToken,
+                        NewPassword = pbPasswdord1.Password,
+                    };
+
+                    var json = JsonConvert.SerializeObject(requestData);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var request = new HttpRequestMessage
+                    {
+                        Method = HttpMethod.Put,
+                        RequestUri = new Uri(httpClient.BaseAddress + "User/change-user-password"),
+                        Content = content
+                    };
+
+                    var response = await httpClient.SendAsync(request);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseContent = await response.Content.ReadAsStringAsync();
+                        var responseData = JsonConvert.DeserializeObject<ServerUserResponse>(responseContent);
+
+                        if (responseData.status == "success")
+                        {
+                            MessageBox.Show("password changed successfully");
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Error: {responseData.error}");
+                        }
+                    }
+                    else
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show($"Error: {errorContent}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("passwords dont match");
+            }
+        }
+        public class ServerUserResponse
+        {
+            public string status { get; set; }
+            public UserInfo data { get; set; }
+            public string error { get; set; }
+        }
+        public class UserInfo
+        {
+            public User user { get; set; }
+        }
+        public class User
+        {
+            public int userID { get; set; }
+            public string username { get; set; }
+            public string password { get; set; }
+            public string email { get; set; }
+            public bool isOnline { get; set; }
+            public bool isAccountDeleted { get; set; }
+            public DateTime lastTimeOnline { get; set; }
+            public string sessionToken { get; set; }
+            public DateTime sessionTokenExpirationDate { get; set; }
+            public string UserProfilePicturePath { get; set; }
         }
     }
 }

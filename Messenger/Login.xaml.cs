@@ -414,16 +414,16 @@ namespace Messenger
         // Your existing User class remains the same
         public class User
         {
-            public int UserID { get; set; }
+            public int userID { get; set; }
             public string username { get; set; }
-            public string Password { get; set; }
-            public string Email { get; set; }
-            public bool IsOnline { get; set; }
-            public bool IsAccountDeleted { get; set; }
-            public DateTime LastTimeOnline { get; set; }
+            public string password { get; set; }
+            public string email { get; set; }
+            public bool isOnline { get; set; }
+            public bool isAccountDeleted { get; set; }
+            public DateTime lastTimeOnline { get; set; }
             public string sessionToken { get; set; }
-            public DateTime SessionTokenExpirationDate { get; set; }
-            public string UserProfilePicturePath { get; set; }
+            public DateTime sessionTokenExpirationDate { get; set; }
+            public string userProfilePicturePath { get; set; }
         }
     }
 }
