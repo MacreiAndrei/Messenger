@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Messenger"
         mc:Ignorable="d"
-        Title="Messenger" Height="900" Width="1400"
+        Title="Messenger" Height="700" Width="1200"
         WindowStartupLocation="CenterScreen"
         MinHeight="700" MinWidth="1000"
         WindowStyle="None"
