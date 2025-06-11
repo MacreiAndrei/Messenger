@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,10 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Net.Http;
-using Newtonsoft.Json;
 using System.Windows.Threading;
-using System.Diagnostics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Messenger.Views
 {
@@ -28,6 +29,7 @@ namespace Messenger.Views
         private DispatcherTimer messagePollingTimer;
         private string _userToken;
         private string _username;
+        private string _chatId;
 
         public ChatView(string sessionToken, string username)
         {
@@ -112,7 +114,7 @@ namespace Messenger.Views
         {
             var border = new Border
             {
-                Tag = chat.ChatID + " " + chat.ChatName,
+                Tag = chat.ChatID + "o_O >_< T_T" + chat.ChatName,
                 Background = Brushes.Transparent,
                 Padding = new Thickness(12),
                 Margin = new Thickness(0, 0, 0, 8),
@@ -173,41 +175,12 @@ namespace Messenger.Views
             return border;
         }
 
-        private void GroupsTab_Click(object sender, RoutedEventArgs e)
-        {
-            GroupsTab.BorderBrush = new SolidColorBrush(Color.FromRgb(139, 92, 246));
-            GroupsTab.Foreground = new SolidColorBrush(Color.FromRgb(139, 92, 246));
-
-            PeopleTab.BorderBrush = Brushes.Transparent;
-            PeopleTab.Foreground = new SolidColorBrush(Color.FromRgb(107, 114, 128));
-
-            FilterContactsList("groups");
-        }
-
-        private void PeopleTab_Click(object sender, RoutedEventArgs e)
-        {
-            PeopleTab.BorderBrush = new SolidColorBrush(Color.FromRgb(139, 92, 246));
-            PeopleTab.Foreground = new SolidColorBrush(Color.FromRgb(139, 92, 246));
-
-            GroupsTab.BorderBrush = Brushes.Transparent;
-            GroupsTab.Foreground = new SolidColorBrush(Color.FromRgb(107, 114, 128));
-
-            FilterContactsList("people");
-        }
-
-        private void FilterContactsList(string filter)
-        {
-            foreach (Border contact in ContactsList.Children)
-            {
-                contact.Visibility = Visibility.Visible;
-            }
-        }
-
         private async void Contact_Click(object sender, MouseButtonEventArgs e)
         {
             var border = sender as Border;
-            var chatId = border?.Tag?.ToString().Split(" ")[0];
-            var chatName = border?.Tag?.ToString().Split(" ")[1];
+            var chatId = border?.Tag?.ToString().Split("o_O >_< T_T")[0];
+            var chatName = border?.Tag?.ToString().Split("o_O >_< T_T")[1];
+            _chatId = border?.Tag?.ToString().Split("o_O >_< T_T")[0];
 
             if (!string.IsNullOrEmpty(chatId) && !string.IsNullOrEmpty(chatName))
             {
@@ -227,7 +200,7 @@ namespace Messenger.Views
 
         private async Task UpdateChatHeader(string chatName)
         {
-            ChatContactName.Text = $"Chat {chatName}";
+            ChatContactName.Text = chatName;
             ChatContactStatus.Text = "Online";
             ChatAvatarText.Text = chatName.Substring(0, 1);
             ChatAvatar.Background = new SolidColorBrush(Color.FromRgb(139, 92, 246));
@@ -513,6 +486,185 @@ namespace Messenger.Views
         {
             messagePollingTimer?.Stop();
             httpClient?.Dispose();
+        }
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            CreateNewChat();
+        }
+
+
+        // Close dropdown when clicking outside
+
+        private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Text = "";
+        }
+
+        private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if(string.IsNullOrWhiteSpace(SearchTextBox.Text))
+                SearchTextBox.Text = "Create new chat...";
+        }
+
+        private async void CreateNewChat()
+        {
+            try
+            {
+                var ChatName = SearchTextBox.Text;
+
+                var requestData = new
+                {
+                    SessionToken = sessionToken,
+                    ChatName = ChatName
+                };
+
+                var json = JsonConvert.SerializeObject(requestData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync("Chat/new-chat", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    LoadUserChats();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to create chat.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error sending message: {ex.Message}");
+            }
+        }
+
+        private void tbAddUserToChat(object sender, RoutedEventArgs e)
+        {
+            AddUserToChat();
+        }
+        public async void AddUserToChat()
+        {
+            try
+            {
+                var requestData = new
+                {
+                    SessionToken = sessionToken,
+                    ChatID = _chatId,
+                    Username = SearchTextBox.Text
+                };
+                Debug.Write(sessionToken);
+                Debug.Write(_chatId);
+                Debug.Write(SearchTextBox.Text);
+                var json = JsonConvert.SerializeObject(requestData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync("Chat/add-user-in-chat", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show($"User {SearchTextBox.Text} added successfully");
+                }
+                else
+                {
+                    MessageBox.Show("Verify username.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error sending message: {ex.Message}");
+            }
+        }
+
+        private void dtDeleteChat_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteChat();
+        }
+        private async void DeleteChat()
+        {
+            try
+            {
+                var ChatName = SearchTextBox.Text;
+
+                var requestData = new
+                {
+                    SessionToken = sessionToken,
+                    ChatID = _chatId
+                };
+
+                var json = JsonConvert.SerializeObject(requestData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Delete,
+                    RequestUri = new Uri(httpClient.BaseAddress + "Chat/delete-chat"),
+                    Content = content
+                };
+
+                var response = await httpClient.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    EmptyState.Visibility = Visibility.Visible;
+                    ChatArea.Visibility = Visibility.Collapsed;
+                    LoadUserChats();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to delete chat.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error sending message: {ex.Message}");
+            }
+        }
+
+        private void btUpdateChatName(object sender, RoutedEventArgs e)
+        {
+            UpdateChatName();
+        }
+
+        public async void UpdateChatName()
+        {
+            try
+            {
+                var requestData = new
+                {
+                    SessionToken = sessionToken,
+                    ChatID = _chatId,
+                    ChatName = SearchTextBox.Text
+                };
+                Debug.Write(sessionToken);
+                Debug.Write(_chatId);
+                Debug.Write(SearchTextBox.Text);
+                var json = JsonConvert.SerializeObject(requestData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Put,
+                    RequestUri = new Uri(httpClient.BaseAddress + "Chat/update-chat"),
+                    Content = content
+                };
+
+                var response = await httpClient.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    EmptyState.Visibility = Visibility.Visible;
+                    ChatArea.Visibility = Visibility.Collapsed;
+                    LoadUserChats();
+                }
+                else
+                {
+                    MessageBox.Show("Huston, we have a problem.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error sending message: {ex.Message}");
+            }
         }
     }
 

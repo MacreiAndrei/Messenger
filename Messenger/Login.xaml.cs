@@ -45,7 +45,6 @@ namespace Messenger
             NameTextBox.TextChanged += NameTextBox_TextChanged;
             PasswordBox.PasswordChanged += PasswordBox_PasswordChanged;
             LoginButton.Click += LoginButton_Click;
-            RegisterButton.Click += RegisterButton_Click;
 
             // Allow Enter key to trigger login
             this.KeyDown += Login_KeyDown;
@@ -69,7 +68,7 @@ namespace Messenger
                     if (user != null)
                     {
                         // Token is valid, proceed to main window
-                        MainWindow mainWindow = new MainWindow(savedToken, user.Username);
+                        MainWindow mainWindow = new MainWindow(savedToken, user.username);
                         mainWindow.Show();
                         this.Close();
                         return;
@@ -266,8 +265,7 @@ namespace Messenger
             LoginButton.IsEnabled = false;
             LoginButton.Content = "Se conectează...";
 
-            try
-            {
+            
                 UserAuth user = new UserAuth
                 {
                     Username = enteredName,
@@ -305,7 +303,7 @@ namespace Messenger
                             MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
-
+                Debug.WriteLine(userData.sessionToken);
                     // Store session token globally for other windows
                     App.CurrentSessionToken = userData.sessionToken;
                     App.CurrentUser = userData;
@@ -317,7 +315,7 @@ namespace Messenger
                         MessageBoxButton.OK, MessageBoxImage.Information);
 
                     // Open MainWindow
-                    MainWindow mainWindow = new MainWindow(userData.sessionToken, userData.Username);
+                    MainWindow mainWindow = new MainWindow(userData.sessionToken, userData.username);
                     mainWindow.Show();
                     this.Close();
                 }
@@ -331,29 +329,7 @@ namespace Messenger
                     MessageBox.Show("Răspuns necunoscut de la server.", "Eroare",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-            }
-            catch (HttpRequestException ex)
-            {
-                MessageBox.Show($"Eroare de conexiune: {ex.Message}", "Eroare de rețea",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (JsonException ex)
-            {
-                MessageBox.Show($"Eroare la procesarea datelor: {ex.Message}", "Eroare",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Eroare neașteptată: {ex.Message}", "Eroare",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                System.Diagnostics.Debug.WriteLine($"Unexpected error in LoginButton_Click: {ex}");
-            }
-            finally
-            {
-                // Re-enable login button
-                LoginButton.IsEnabled = true;
-                LoginButton.Content = "Login";
-            }
+
         }
 
         private void Login_KeyDown(object sender, KeyEventArgs e)
@@ -368,7 +344,6 @@ namespace Messenger
         {
             using var content = new StringContent(json, Encoding.UTF8, "application/json");
             using var response = await client.PostAsync(url, content);
-            response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
 
@@ -440,7 +415,7 @@ namespace Messenger
         public class User
         {
             public int UserID { get; set; }
-            public string Username { get; set; }
+            public string username { get; set; }
             public string Password { get; set; }
             public string Email { get; set; }
             public bool IsOnline { get; set; }

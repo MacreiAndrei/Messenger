@@ -50,7 +50,7 @@ namespace Messenger.Models
                 var userDataToSave = new User
                 {
                     UserID = user.UserID,
-                    Username = user.Username,
+                    username = user.username,
                     Email = user.Email,
                     IsOnline = user.IsOnline,
                     IsAccountDeleted = user.IsAccountDeleted,

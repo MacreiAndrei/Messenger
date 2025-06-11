@@ -319,7 +319,8 @@
                     <!-- Register button -->
                     <Button Grid.Column="2"
                             Style="{StaticResource RegisterButtonStyle}"
-                            x:Name="RegisterButton">
+                            x:Name="RegisterButton"
+                            Click="Register_Click">
                         <StackPanel Orientation="Horizontal">
                             <Viewbox Width="16" Height="16" Margin="0,0,8,0">
                                 <Canvas Width="24" Height="24">

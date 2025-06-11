@@ -26,9 +26,9 @@ namespace Messenger
             InitializeComponent();
             _userToken = userToken;
             _username = username;
-            tbUserName.Text = _username[0].ToString().ToUpper();
+                tbUserName.Text = App.CurrentUser.username[0].ToString();
             SetActiveButton(HomeButton);
-            ShowView("Home");
+            ShowView("Chat");
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
