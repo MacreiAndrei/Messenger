@@ -51,7 +51,7 @@ namespace Messenger.Views
             };
 
             httpClient = new HttpClient(clientHandler);
-            httpClient.BaseAddress = new Uri("https://localhost:5171");
+            httpClient.BaseAddress = new Uri("https://172.20.10.8:5172");
         }
 
         private void InitializeMessagePolling()
@@ -386,7 +386,7 @@ namespace Messenger.Views
             }
 
             // Determine if message is from current user (this would need proper implementation)
-            bool isMyMessage = message.SenderUsername == "alice"; // This should be dynamic
+            bool isMyMessage = message.SenderUsername == _username; // This should be dynamic
 
             var messageBorder = new Border
             {

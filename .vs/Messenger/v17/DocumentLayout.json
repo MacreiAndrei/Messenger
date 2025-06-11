@@ -7,6 +7,14 @@
       "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\views\\chatview.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\alex\\desktop\\messenger\\messenger\\views\\chatview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\views\\chatview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\alex\\desktop\\messenger\\messenger\\apiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\apiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\alex\\desktop\\messenger\\messenger\\views\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\views\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
@@ -17,10 +25,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\alex\\desktop\\messenger\\messenger\\login.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\login.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|c:\\users\\alex\\desktop\\messenger\\messenger\\apiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1F5706C5-1EC3-4840-B0DE-1E4CC3356FFA}|Messenger\\Messenger.csproj|solutionrelative:messenger\\apiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,11 +34,23 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
+              "Title": "ChatView.xaml",
+              "DocumentMoniker": "C:\\Users\\alex\\Desktop\\Messenger\\Messenger\\Views\\ChatView.xaml",
+              "RelativeDocumentMoniker": "Messenger\\Views\\ChatView.xaml",
+              "ToolTip": "C:\\Users\\alex\\Desktop\\Messenger\\Messenger\\Views\\ChatView.xaml",
+              "RelativeToolTip": "Messenger\\Views\\ChatView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-06-11T10:52:58.824Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "Login.xaml",
               "DocumentMoniker": "C:\\Users\\alex\\Desktop\\Messenger\\Messenger\\Login.xaml",
               "RelativeDocumentMoniker": "Messenger\\Login.xaml",
@@ -46,20 +62,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "ApiConfig.cs",
               "DocumentMoniker": "C:\\Users\\alex\\Desktop\\Messenger\\Messenger\\ApiConfig.cs",
               "RelativeDocumentMoniker": "Messenger\\ApiConfig.cs",
               "ToolTip": "C:\\Users\\alex\\Desktop\\Messenger\\Messenger\\ApiConfig.cs",
               "RelativeToolTip": "Messenger\\ApiConfig.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA5AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-10T14:37:32.175Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "Login.xaml.cs",
               "DocumentMoniker": "C:\\Users\\alex\\Desktop\\Messenger\\Messenger\\Login.xaml.cs",
               "RelativeDocumentMoniker": "Messenger\\Login.xaml.cs",
@@ -67,8 +83,7 @@
               "RelativeToolTip": "Messenger\\Login.xaml.cs",
               "ViewState": "AgIAADIAAAAAAAAAAIAwwE4AAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-10T14:35:10.891Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-10T14:35:10.891Z"
             },
             {
               "$type": "Document",
@@ -78,14 +93,14 @@
               "RelativeDocumentMoniker": "Messenger\\Views\\ChatView.xaml.cs",
               "ToolTip": "C:\\Users\\alex\\Desktop\\Messenger\\Messenger\\Views\\ChatView.xaml.cs",
               "RelativeToolTip": "Messenger\\Views\\ChatView.xaml.cs",
-              "ViewState": "AgIAAOcAAAAAAAAAAAAcwLUBAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAFUBAAAAAAAAAADgv4QBAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-10T14:34:54.505Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\alex\\Desktop\\Messenger\\Messenger\\Views\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "Messenger\\Views\\MainWindow.xaml.cs",
@@ -93,8 +108,7 @@
               "RelativeToolTip": "Messenger\\Views\\MainWindow.xaml.cs",
               "ViewState": "AgIAAEEAAAAAAAAAAAAswEwAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-10T14:32:21.626Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-10T14:32:21.626Z"
             }
           ]
         }
