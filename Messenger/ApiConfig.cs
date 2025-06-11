@@ -9,7 +9,7 @@ namespace Messenger
     public static class ApiConfig
     {
         // Schimbă doar aici IP-ul și se va actualiza în toată aplicația
-        public const string BASE_URL = "https://172.20.10.8:5172";
+        public const string BASE_URL = "https://192.168.133.2:5172";
 
 
 

@@ -514,14 +514,11 @@
                             <TextBox x:Name="MessageTextBox" Background="Transparent" 
                                      BorderThickness="0" FontSize="15" 
                                      VerticalAlignment="Center"
-                                     Foreground="#1e293b"
                                      GotFocus="MessageTextBox_GotFocus"
                                      LostFocus="MessageTextBox_LostFocus"
-                                     KeyDown="MessageTextBox_KeyDown"/>
-                            <TextBlock Text="Type your message here..." FontSize="15"
-                                       Foreground="#94a3b8" IsHitTestVisible="False"
-                                       VerticalAlignment="Center"
-                                      />
+                                     KeyDown="MessageTextBox_KeyDown"
+                                     Text="Type your message here..."
+                                     Foreground="#94a3b8"/>
                         </Grid>
                     </Border>
 

@@ -43,15 +43,13 @@ namespace Messenger.Views
         {
             var clientHandler = new HttpClientHandler();
 
-            // For development with localhost HTTPS - bypass SSL certificate validation
-            // WARNING: Only use this for development/testing environments!
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
             {
-                return true; // Accept all certificates for localhost development
+                return true;
             };
 
             httpClient = new HttpClient(clientHandler);
-            httpClient.BaseAddress = new Uri("https://172.20.10.8:5172");
+            httpClient.BaseAddress = new Uri(ApiConfig.BASE_URL);
         }
 
         private void InitializeMessagePolling()
@@ -126,7 +124,6 @@ namespace Messenger.Views
 
             var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
 
-            // Avatar
             var avatarBorder = new Border
             {
                 Width = 40,
@@ -148,7 +145,6 @@ namespace Messenger.Views
 
             avatarBorder.Child = avatarText;
 
-            // Text content
             var textPanel = new StackPanel();
 
             var nameText = new TextBlock
@@ -201,7 +197,6 @@ namespace Messenger.Views
 
         private void FilterContactsList(string filter)
         {
-            // For now, show all contacts since we don't have group/person distinction from API
             foreach (Border contact in ContactsList.Children)
             {
                 contact.Visibility = Visibility.Visible;
@@ -217,27 +212,21 @@ namespace Messenger.Views
             {
                 currentChatId = chatId;
 
-                // Show chat area
                 EmptyState.Visibility = Visibility.Collapsed;
                 ChatArea.Visibility = Visibility.Visible;
 
-                // Update chat header
                 await UpdateChatHeader(chatId);
 
-                // Load messages
                 await LoadMessagesForChat(chatId);
 
-                // Start polling for new messages
                 messagePollingTimer.Start();
 
-                // Scroll to bottom
                 MessagesScrollViewer.ScrollToBottom();
             }
         }
 
         private async Task UpdateChatHeader(string chatId)
         {
-            // For now, use a simple approach
             ChatContactName.Text = $"Chat {chatId}";
             ChatContactStatus.Text = "Online";
             ChatAvatarText.Text = chatId.Substring(0, 1);
@@ -321,7 +310,6 @@ namespace Messenger.Views
 
                     if (responseData.status == "success" && responseData.data.messages?.Count > 0)
                     {
-                        // Получаем ID последнего сообщения (если есть)
                         var lastMessageId = MessagesPanel.Children.Count > 0 ?
                             (MessagesPanel.Children[MessagesPanel.Children.Count - 1] as FrameworkElement)?.Tag?.ToString() : null;
 
@@ -376,28 +364,27 @@ namespace Messenger.Views
 
         private void AddMessageToUI(MessageInfo message)
         {
-            // Проверяем, не было ли уже добавлено это сообщение
-            foreach (var child in MessagesPanel.Children)
+            bool isMyMessage = message.SenderUsername == _username;
+            if (!isMyMessage)
             {
-                if (child is FrameworkElement element && element.Tag?.ToString() == message.MessageID)
+                foreach (var child in MessagesPanel.Children)
                 {
-                    return; // Сообщение уже есть в чате
+                    if (child is FrameworkElement element && element.Tag?.ToString() == message.MessageID)
+                    {
+                        return;
+                    }
                 }
             }
-
-            // Determine if message is from current user (this would need proper implementation)
-            bool isMyMessage = message.SenderUsername == _username; // This should be dynamic
 
             var messageBorder = new Border
             {
                 Style = (Style)FindResource(isMyMessage ? "MyMessageStyle" : "OtherMessageStyle"),
                 Margin = new Thickness(0, 0, 0, 8),
-                Tag = message.MessageID // Сохраняем ID сообщения для проверки дубликатов
+                Tag = message.MessageID
             };
 
             var messagePanel = new StackPanel();
 
-            // Add sender name for other messages
             if (!isMyMessage)
             {
                 var senderText = new TextBlock
@@ -436,24 +423,6 @@ namespace Messenger.Views
             messageBorder.Child = messagePanel;
             MessagesPanel.Children.Add(messageBorder);
         }
-        private void AddMessage(string messageText, bool isMyMessage)
-        {
-            var messageBorder = new Border
-            {
-                Style = (Style)FindResource(isMyMessage ? "MyMessageStyle" : "OtherMessageStyle")
-            };
-
-            var textBlock = new TextBlock
-            {
-                Text = messageText,
-                FontSize = 14,
-                Foreground = isMyMessage ? Brushes.White : new SolidColorBrush(Color.FromRgb(55, 65, 81)),
-                TextWrapping = TextWrapping.Wrap
-            };
-
-            messageBorder.Child = textBlock;
-            MessagesPanel.Children.Add(messageBorder);
-        }
 
         private void MessageTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -479,16 +448,17 @@ namespace Messenger.Views
         {
             if (e.Key == Key.Enter)
             {
-                SendMessage();
+                SendMessage(true);
+                MessageTextBox.Text = "";
             }
         }
 
         private void SendMessage_Click(object sender, RoutedEventArgs e)
         {
-            SendMessage();
+            SendMessage(false);
         }
 
-        private async void SendMessage()
+        private async void SendMessage(bool isPressedEnter)
         {
             if (!isMessagePlaceholder && !string.IsNullOrWhiteSpace(MessageTextBox.Text) && !string.IsNullOrEmpty(currentChatId))
             {
@@ -510,21 +480,20 @@ namespace Messenger.Views
 
                     if (response.IsSuccessStatusCode)
                     {
-                        // Clear textbox
-                        MessageTextBox.Text = "Type your message here...";
-                        MessageTextBox.Foreground = new SolidColorBrush(Color.FromRgb(156, 163, 175));
-                        isMessagePlaceholder = true;
-
-                        // The message will appear via polling, but we can add it immediately for better UX
+                        if (!isPressedEnter)
+                        {
+                            MessageTextBox.Text = "Type your message here...";
+                            MessageTextBox.Foreground = new SolidColorBrush(Color.FromRgb(156, 163, 175));
+                            isMessagePlaceholder = true;
+                        }
                         var tempMessage = new MessageInfo
                         {
                             Content = messageContent,
-                            SenderUsername = _username, // This should be the current user
+                            SenderUsername = _username,
                             Timestamp = DateTime.Now
                         };
                         AddMessageToUI(tempMessage);
 
-                        // Scroll to bottom
                         MessagesScrollViewer.UpdateLayout();
                         MessagesScrollViewer.ScrollToBottom();
                     }
@@ -546,8 +515,6 @@ namespace Messenger.Views
             httpClient?.Dispose();
         }
     }
-
-    // Data models
 
     public class MessageType2
     {
