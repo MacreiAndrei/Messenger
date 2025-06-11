@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,7 +26,7 @@ namespace Messenger.Views
         private bool isMessagePlaceholder = true;
         private string currentChatId;
         private string sessionToken;
-        private HttpClient httpClient;
+        private static HttpClient httpClient;
         private DispatcherTimer messagePollingTimer;
         private string _userToken;
         private string _username;
@@ -226,17 +227,17 @@ namespace Messenger.Views
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var responseData = JsonConvert.DeserializeObject<ServerMessageResponse>(responseContent);
+                    var responseData = JsonConvert.DeserializeObject<ServerMessagesResponse>(responseContent);
 
                     if (responseData.status == "success")
                     {
                         var messages = responseData.data.messages.Select(m => new MessageInfo
                         {
-                            MessageID = m.MessageID.ToString(),
-                            Content = m.Content,
-                            SenderUsername = m.Sender.Username,
-                            Timestamp = m.TimeStamp,
-                            ChatID = m.ChatID.ToString()
+                            MessageID = m.messageID.ToString(),
+                            Content = m.content,
+                            SenderUsername = m.sender.Username,
+                            Timestamp = m.timeStamp,
+                            ChatID = m.chatID.ToString()
                         }).ToList();
 
                         DisplayMessages(messages);
@@ -279,7 +280,7 @@ namespace Messenger.Views
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var responseData = JsonConvert.DeserializeObject<ServerMessageResponse>(responseContent);
+                    var responseData = JsonConvert.DeserializeObject<ServerMessagesResponse>(responseContent);
 
                     if (responseData.status == "success" && responseData.data.messages?.Count > 0)
                     {
@@ -287,14 +288,14 @@ namespace Messenger.Views
                             (MessagesPanel.Children[MessagesPanel.Children.Count - 1] as FrameworkElement)?.Tag?.ToString() : null;
 
                         var newMessages = responseData.data.messages
-                            .Where(m => lastMessageId == null || m.MessageID.ToString() != lastMessageId)
+                            .Where(m => lastMessageId == null || m.messageID.ToString() != lastMessageId)
                             .Select(m => new MessageInfo
                             {
-                                MessageID = m.MessageID.ToString(),
-                                Content = m.Content,
-                                SenderUsername = m.Sender.Username,
-                                Timestamp = m.TimeStamp,
-                                ChatID = m.ChatID.ToString()
+                                MessageID = m.messageID.ToString(),
+                                Content = m.content,
+                                SenderUsername = m.sender.Username,
+                                Timestamp = m.timeStamp,
+                                ChatID = m.chatID.ToString()
                             }).ToList();
 
                         foreach (var message in newMessages)
@@ -390,6 +391,22 @@ namespace Messenger.Views
                 Margin = new Thickness(0, 2, 0, 0)
             };
 
+            if (isMyMessage)
+            {
+                var contextMenu = new ContextMenu();
+
+                var editMenuItem = new MenuItem { Header = "Редактировать" };
+                editMenuItem.Click += async (s, e) => EditMessage(message);
+
+                var deleteMenuItem = new MenuItem { Header = "Удалить" };
+                deleteMenuItem.Click += (s, e) => DeleteMessage(message);
+
+                contextMenu.Items.Add(editMenuItem);
+                contextMenu.Items.Add(deleteMenuItem);
+
+                messageBorder.ContextMenu = contextMenu;
+            }
+
             messagePanel.Children.Add(contentText);
             messagePanel.Children.Add(timeText);
 
@@ -446,12 +463,12 @@ namespace Messenger.Views
                         ChatID = currentChatId
                     };
 
-                    var json = JsonConvert.SerializeObject(requestData);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    var jsonRequest = JsonConvert.SerializeObject(requestData);
+                    string jsonResponse = await PostRequestAsync(httpClient.BaseAddress + "Message/save", jsonRequest);
+                    Debug.WriteLine(jsonResponse);
+                    ServerMessageResponse response = System.Text.Json.JsonSerializer.Deserialize<ServerMessageResponse>(jsonResponse);
 
-                    var response = await httpClient.PostAsync("Message/Save", content);
-
-                    if (response.IsSuccessStatusCode)
+                    if (response.status == "success")
                     {
                         if (!isPressedEnter)
                         {
@@ -461,6 +478,7 @@ namespace Messenger.Views
                         }
                         var tempMessage = new MessageInfo
                         {
+                            MessageID = response.data.messageID.ToString(),
                             Content = messageContent,
                             SenderUsername = _username,
                             Timestamp = DateTime.Now
@@ -481,6 +499,61 @@ namespace Messenger.Views
                 }
             }
         }
+        private static async Task<string> PostRequestAsync(string url, string json)
+        {
+            using var content = new StringContent(json, Encoding.UTF8, "application/json");
+            using var response = await httpClient.PostAsync(url, content);
+            return await response.Content.ReadAsStringAsync();
+        }
+        public async void EditMessage(MessageInfo message)
+        {
+
+        }
+
+        public async void DeleteMessage(MessageInfo message)
+        {
+            try
+            {
+
+                var requestData = new
+                {
+                    SessionToken = sessionToken,
+                    MessageID = message.MessageID
+                };
+                Debug.Write(message.MessageID);
+                var json = JsonConvert.SerializeObject(requestData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Delete,
+                    RequestUri = new Uri(httpClient.BaseAddress + "Message/message-delete"),
+                    Content = content
+                };
+
+                var response = await httpClient.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    foreach (var child in MessagesPanel.Children)
+                    {
+                        if (child is FrameworkElement element && element.Tag?.ToString() == message.MessageID)
+                        {
+                            MessagesPanel.Children.Remove(element);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Failed to delete message.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error sending message: {ex.Message}");
+            }
+        }
 
         public void Cleanup()
         {
@@ -491,9 +564,6 @@ namespace Messenger.Views
         {
             CreateNewChat();
         }
-
-
-        // Close dropdown when clicking outside
 
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -673,8 +743,14 @@ namespace Messenger.Views
         public string SessionToken { get; set; }
         public string ChatID { get; set; }
     }
-
     public class ServerMessageResponse
+    {
+        public string status { get; set; }
+        public string error { get; set; }
+        public ServerMessage data { get; set; }
+    }
+
+    public class ServerMessagesResponse
     {
         public string status { get; set; }
         public string error { get; set; }
@@ -688,14 +764,14 @@ namespace Messenger.Views
 
     public class ServerMessage
     {
-        public int MessageID { get; set; }
-        public int UserID { get; set; }
-        public string Content { get; set; }
-        public DateTime TimeStamp { get; set; }
-        public int ChatID { get; set; }
-        public bool IsSeen { get; set; }
-        public bool IsFile { get; set; }
-        public MessageSender Sender { get; set; }
+        public int messageID { get; set; }
+        public int userID { get; set; }
+        public string content { get; set; }
+        public DateTime timeStamp { get; set; }
+        public int chatID { get; set; }
+        public bool isSeen { get; set; }
+        public bool isFile { get; set; }
+        public MessageSender sender { get; set; }
     }
 
     public class MessageSender
