@@ -221,7 +221,7 @@
                             <Border.Effect>
                                 <DropShadowEffect Color="#33000000" BlurRadius="15" ShadowDepth="3" Opacity="0.4"/>
                             </Border.Effect>
-                            <TextBlock Text="M" FontSize="28" FontWeight="Bold" 
+                            <TextBlock x:Name="tbUserName" FontSize="28" FontWeight="Bold" 
                                        Foreground="White" HorizontalAlignment="Center" 
                                        VerticalAlignment="Center"
                                        FontFamily="Segoe UI Light"/>

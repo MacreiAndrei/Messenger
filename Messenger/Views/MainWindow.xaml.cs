@@ -26,6 +26,7 @@ namespace Messenger
             InitializeComponent();
             _userToken = userToken;
             _username = username;
+            tbUserName.Text = _username[0].ToString().ToUpper();
             SetActiveButton(HomeButton);
             ShowView("Home");
         }
