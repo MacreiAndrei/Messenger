@@ -60,9 +60,11 @@ namespace Messenger.Views
             messagePollingTimer = new DispatcherTimer();
             messagePollingTimer.Interval = TimeSpan.FromSeconds(0.5);
             messagePollingTimer.Tick += async (s, e) => await PollForNewMessages();
+            messagePollingTimer.Tick += async (s, e) => await PollForNewDeletedMessages();
+            messagePollingTimer.Tick += async (s, e) => await PollForNewEditedMessages();
         }
 
-
+       
         public void SetSessionToken(string token)
         {
             sessionToken = token;
@@ -306,6 +308,57 @@ namespace Messenger.Views
                         if (newMessages.Count > 0)
                         {
                             MessagesScrollViewer.ScrollToBottom();
+                        }
+                    }
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine($"Error polling new messages: {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Polling error: {ex.Message}");
+            }
+        }
+        private async Task PollForNewEditedMessages()
+        {
+
+        }
+
+        private async Task PollForNewDeletedMessages()
+        {
+            try
+            {
+                var requestData = new MessageType2
+                {
+                    SessionToken = sessionToken,
+                    ChatID = currentChatId
+                };
+
+                var json = JsonConvert.SerializeObject(requestData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync("Message/get-deleted-messages", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseData = JsonConvert.DeserializeObject<ServerDeleteMessagesResponse>(responseContent);
+
+                    if (responseData.status == "success" && responseData.data?.Length > 0)
+                    {
+                        foreach (var message in responseData.data)
+                        {
+                            foreach (var child in MessagesPanel.Children)
+                            {
+                                if (child is FrameworkElement element && element.Tag?.ToString() == message.ToString())
+                                {
+                                    MessagesPanel.Children.Remove(element);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -806,6 +859,12 @@ namespace Messenger.Views
         public string status { get; set; }
         public string error { get; set; }
         public MessageData data { get; set; }
+    }
+    public class ServerDeleteMessagesResponse
+    {
+        public string status { get; set; }
+        public string error { get; set; }
+        public int[] data { get; set; }
     }
 
     public class MessageData
