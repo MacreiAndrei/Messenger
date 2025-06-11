@@ -320,14 +320,17 @@
                         HorizontalAlignment="Right" VerticalAlignment="Top"
                         Margin="0,15,20,0">
                 <Button Width="12" Height="12" Margin="5,0" 
+                        Background="#00CA4E" BorderThickness="0" 
+                       Cursor="Hand"
+                        Click="Minimize_Click"/>
+                <Button Width="12" Height="12" Margin="5,0" 
                         Background="#FFB946" BorderThickness="0" 
-                         Cursor="Hand"/>
+                         Cursor="Hand"
+                        Click="Maximize_Click"/>
                 <Button Width="12" Height="12" Margin="5,0" 
                         Background="#FF605C" BorderThickness="0" 
-                         Cursor="Hand"/>
-                <Button Width="12" Height="12" Margin="5,0" 
-                        Background="#00CA4E" BorderThickness="0" 
-                       Cursor="Hand"/>
+                        Cursor="Hand"
+                        Click="Close_Click"/>
             </StackPanel>
         </Grid>
     </Border>

@@ -20,6 +20,7 @@ namespace Messenger
     {
         public string _userToken;
         public string _username;
+        public bool _isMaximized = false;
         public MainWindow(string userToken, string username)
         {
             InitializeComponent();
@@ -102,6 +103,30 @@ namespace Messenger
         public void ShowNotificationDot()
         {
             NotificationDot.Visibility = Visibility.Visible;
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Maximize_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_isMaximized)
+            {
+                this.WindowState = WindowState.Maximized;
+                _isMaximized = true;
+            }
+            else
+            {
+                this.WindowState = WindowState.Normal;
+                _isMaximized = false;
+            }
+        }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState= WindowState.Minimized;
         }
     }
 }
