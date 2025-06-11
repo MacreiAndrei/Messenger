@@ -42,26 +42,7 @@ namespace Messenger.Views
             httpClient.BaseAddress = new Uri(ApiConfig.BASE_URL);
         }
 
-        private void DeleteAllConversations_Click(object sender, RoutedEventArgs e)
-        {
-            var result = MessageBox.Show(
-                "Ești sigur că vrei să ștergi toate conversațiile?\n\nAceastă acțiune nu poate fi anulată!",
-                "Confirmare ștergere",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning
-            );
 
-            if (result == MessageBoxResult.Yes)
-            {
-                // Aici ar fi logica pentru ștergerea conversațiilor
-                MessageBox.Show(
-                    "Toate conversațiile au fost șterse.",
-                    "Conversații șterse",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information
-                );
-            }
-        }
 
         private void DeleteAccount_Click(object sender, RoutedEventArgs e)
         {
@@ -89,17 +70,61 @@ namespace Messenger.Views
 
                 if (finalConfirm == MessageBoxResult.Yes)
                 {
-                    // Aici ar fi logica pentru ștergerea contului
-                    MessageBox.Show(
-                        "Contul a fost șters. Aplicația se va închide.",
-                        "Cont șters",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information
-                    );
 
-                    // Închide aplicația
-                    Application.Current.Shutdown();
+                    // Aici ar fi logica pentru ștergerea contului
+                    DeleteUser();
                 }
+            }
+        }
+        public async void DeleteUser()
+        {
+            try
+            {
+                var requestData = new
+                {
+                    SessionToken = App.CurrentSessionToken
+                };
+
+                var json = JsonConvert.SerializeObject(requestData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Delete,
+                    RequestUri = new Uri(httpClient.BaseAddress + "User/delete-user"),
+                    Content = content
+                };
+
+                var response = await httpClient.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseData = JsonConvert.DeserializeObject<ServerUserResponse>(responseContent);
+
+                    if (responseData.status == "success")
+                    {
+                        MessageBox.Show(
+                            "Contul a fost șters. Aplicația se va închide.",
+                            "Cont șters",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information
+                        );
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Error: {responseData.error}");
+                    }
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Error: {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
             }
         }
 

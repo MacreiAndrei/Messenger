@@ -686,12 +686,6 @@
                         </Border>
 
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="🗑️ Șterge toate conversațiile" 
-                                    Style="{StaticResource DangerSecondaryButtonStyle}"
-                                    Padding="18,12" 
-                                    FontSize="14" 
-                                    Margin="0,0,16,0"
-                                    Click="DeleteAllConversations_Click"/>
 
                             <Button Content="❌ Șterge contul" 
                                     Style="{StaticResource DangerButtonStyle}"
