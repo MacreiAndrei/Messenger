@@ -54,7 +54,7 @@ namespace Messenger.Views
         private void InitializeMessagePolling()
         {
             messagePollingTimer = new DispatcherTimer();
-            messagePollingTimer.Interval = TimeSpan.FromSeconds(1);
+            messagePollingTimer.Interval = TimeSpan.FromSeconds(2);
             messagePollingTimer.Tick += async (s, e) => await PollForNewMessages();
             messagePollingTimer.Tick += async (s, e) => await PollForNewDeletedMessages();
             messagePollingTimer.Tick += async (s, e) => await PollForNewEditedMessages();
