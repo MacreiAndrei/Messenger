@@ -21,6 +21,13 @@ namespace Messenger.Views
         private string _username;
         private string _chatId;
 
+        private bool _isChatCreate = true;
+        private bool _isAddUser = false;
+        private bool _isRenameChat = false;
+
+        private bool _isEditMessage = false;
+        private MessageInfo _editMessage;
+
         public ChatView(string sessionToken, string username)
         {
             InitializeComponent();
@@ -47,7 +54,7 @@ namespace Messenger.Views
         private void InitializeMessagePolling()
         {
             messagePollingTimer = new DispatcherTimer();
-            messagePollingTimer.Interval = TimeSpan.FromSeconds(0.5);
+            messagePollingTimer.Interval = TimeSpan.FromSeconds(1);
             messagePollingTimer.Tick += async (s, e) => await PollForNewMessages();
             messagePollingTimer.Tick += async (s, e) => await PollForNewDeletedMessages();
             messagePollingTimer.Tick += async (s, e) => await PollForNewEditedMessages();
@@ -330,7 +337,6 @@ namespace Messenger.Views
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var responseData = JsonConvert.DeserializeObject<ServerMessagesResponse>(responseContent);
 
-                        Debug.WriteLine(responseData.data.messages?.Count);
                     if (responseData.status == "success" && responseData.data.messages?.Count > 0)
                     {
                         foreach (var message in responseData.data.messages)
@@ -543,50 +549,109 @@ namespace Messenger.Views
         {
             if (!isMessagePlaceholder && !string.IsNullOrWhiteSpace(MessageTextBox.Text) && !string.IsNullOrEmpty(currentChatId))
             {
-                try
+                if (!_isEditMessage)
                 {
-                    var messageContent = MessageTextBox.Text;
-
-                    var requestData = new
+                    try
                     {
-                        SessionToken = sessionToken,
-                        Content = messageContent,
-                        ChatID = currentChatId
-                    };
+                        var messageContent = MessageTextBox.Text;
 
-                    var jsonRequest = JsonConvert.SerializeObject(requestData);
-                    string jsonResponse = await PostRequestAsync(httpClient.BaseAddress + "Message/save", jsonRequest);
-                    Debug.WriteLine(jsonResponse);
-                    ServerMessageResponse response = System.Text.Json.JsonSerializer.Deserialize<ServerMessageResponse>(jsonResponse);
-
-                    if (response.status == "success")
-                    {
-                        if (!isPressedEnter)
+                        var requestData = new
                         {
-                            MessageTextBox.Text = "Type your message here...";
-                            MessageTextBox.Foreground = new SolidColorBrush(Color.FromRgb(156, 163, 175));
-                            isMessagePlaceholder = true;
-                        }
-                        var tempMessage = new MessageInfo
-                        {
-                            MessageID = response.data.messageID.ToString(),
+                            SessionToken = sessionToken,
                             Content = messageContent,
-                            SenderUsername = _username,
-                            Timestamp = DateTime.Now
+                            ChatID = currentChatId
                         };
-                        AddMessageToUI(tempMessage);
 
-                        MessagesScrollViewer.UpdateLayout();
-                        MessagesScrollViewer.ScrollToBottom();
+                        var jsonRequest = JsonConvert.SerializeObject(requestData);
+                        string jsonResponse = await PostRequestAsync(httpClient.BaseAddress + "Message/save", jsonRequest);
+                        Debug.WriteLine(jsonResponse);
+                        ServerMessageResponse response = System.Text.Json.JsonSerializer.Deserialize<ServerMessageResponse>(jsonResponse);
+
+                        if (response.status == "success")
+                        {
+                            if (!isPressedEnter)
+                            {
+                                MessageTextBox.Text = "Type your message here...";
+                                MessageTextBox.Foreground = new SolidColorBrush(Color.FromRgb(156, 163, 175));
+                                isMessagePlaceholder = true;
+                            }
+                            var tempMessage = new MessageInfo
+                            {
+                                MessageID = response.data.messageID.ToString(),
+                                Content = messageContent,
+                                SenderUsername = _username,
+                                Timestamp = DateTime.Now
+                            };
+                            AddMessageToUI(tempMessage);
+
+                            MessagesScrollViewer.UpdateLayout();
+                            MessagesScrollViewer.ScrollToBottom();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to send message.");
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Failed to send message.");
+                        MessageBox.Show($"Error sending message: {ex.Message}");
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show($"Error sending message: {ex.Message}");
+                    try
+                    {
+                        var requestData = new
+                        {
+                            SessionToken = sessionToken,
+                            MessageID = _editMessage.MessageID,
+                            Content = MessageTextBox.Text,
+                        };
+                        Debug.Write(_editMessage.MessageID);
+                        var json = JsonConvert.SerializeObject(requestData);
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                        var request = new HttpRequestMessage
+                        {
+                            Method = HttpMethod.Put,
+                            RequestUri = new Uri(httpClient.BaseAddress + "Message/message-update"),
+                            Content = content
+                        };
+
+                        var response = await httpClient.SendAsync(request);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            foreach (var child in MessagesPanel.Children)
+                            {
+                                if (child is Border border && border.Tag?.ToString() == _editMessage.MessageID)
+                                {
+                                    if (border.Child is StackPanel panel)
+                                    {
+                                        foreach (var item in panel.Children)
+                                        {
+                                            if (item is TextBlock textBlock &&
+                                                textBlock.FontSize == 14)
+                                            {
+                                                textBlock.Text = MessageTextBox.Text;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                            _isEditMessage = false;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to update message.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error sending message: {ex.Message}");
+                    }
                 }
             }
         }
@@ -598,58 +663,11 @@ namespace Messenger.Views
         }
         public async void EditMessage(MessageInfo message)
         {
-            try
-            {
-                var requestData = new
-                {
-                    SessionToken = sessionToken,
-                    MessageID = message.MessageID,
-                    Content = MessageTextBox.Text,
-                };
-                Debug.Write(message.MessageID);
-                var json = JsonConvert.SerializeObject(requestData);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+            _isEditMessage = true;
+            _editMessage = message;
+            MessageTextBox.Text = message.Content;
 
-                var request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Put,
-                    RequestUri = new Uri(httpClient.BaseAddress + "Message/message-update"),
-                    Content = content
-                };
-
-                var response = await httpClient.SendAsync(request);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    foreach (var child in MessagesPanel.Children)
-                    {
-                        if (child is Border border && border.Tag?.ToString() == message.MessageID)
-                        {
-                            if (border.Child is StackPanel panel)
-                            {
-                                foreach (var item in panel.Children)
-                                {
-                                    if (item is TextBlock textBlock &&
-                                        textBlock.FontSize == 14)
-                                    {
-                                        textBlock.Text = MessageTextBox.Text;
-                                        break;
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Failed to update message.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error sending message: {ex.Message}");
-            }
+            isMessagePlaceholder = false;
         }
 
         public async void DeleteMessage(MessageInfo message)
@@ -704,7 +722,9 @@ namespace Messenger.Views
         }
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            CreateNewChat();
+            if (_isChatCreate) { CreateNewChat(); }
+            if (_isAddUser) { AddUserToChat(); }
+            if (_isRenameChat) { UpdateChatName(); }
         }
 
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
@@ -752,7 +772,10 @@ namespace Messenger.Views
 
         private void tbAddUserToChat(object sender, RoutedEventArgs e)
         {
-            AddUserToChat();
+            _isChatCreate = false;
+            _isAddUser = true;
+            _isRenameChat = false;
+                SearchTextBox.Text = "Add user to chat chat...";
         }
         public async void AddUserToChat()
         {
@@ -775,6 +798,10 @@ namespace Messenger.Views
                 if (response.IsSuccessStatusCode)
                 {
                     MessageBox.Show($"User {SearchTextBox.Text} added successfully");
+                    _isChatCreate = true;
+                    _isAddUser = false;
+                    _isRenameChat = false;
+                        SearchTextBox.Text = "Create new chat...";
                 }
                 else
                 {
@@ -820,6 +847,10 @@ namespace Messenger.Views
                     EmptyState.Visibility = Visibility.Visible;
                     ChatArea.Visibility = Visibility.Collapsed;
                     LoadUserChats();
+                    _isChatCreate = true;
+                    _isAddUser = false;
+                    _isRenameChat = false;
+                        SearchTextBox.Text = "Create new chat...";
                 }
                 else
                 {
@@ -834,7 +865,10 @@ namespace Messenger.Views
 
         private void btUpdateChatName(object sender, RoutedEventArgs e)
         {
-            UpdateChatName();
+            _isChatCreate = false;
+            _isAddUser = false;
+            _isRenameChat = true;
+                SearchTextBox.Text = "New chat name...";
         }
 
         public async void UpdateChatName()
