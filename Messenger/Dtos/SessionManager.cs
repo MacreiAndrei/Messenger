@@ -7,10 +7,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using static Messenger.Login;
 using System.Windows;
+using Messenger.Models;
 
-namespace Messenger.Models
+namespace Messenger.Dtos
 {
-    public static class SessionManager
+    public class SessionManager
     {
         private const string TOKEN_FILE_NAME = "session_token.dat";
         private const string USER_DATA_FILE_NAME = "user_data.dat";
@@ -28,11 +29,10 @@ namespace Messenger.Models
         /// Сохраняет сессию пользователя на устройство
         /// </summary>
         /// <param name="user">Данные пользователя</param>
-        public static void SaveSession(User user)
+        public void SaveSession(User user)
         {
             try
             {
-                // Проверяем, что пользователь и токен не null
                 if (user == null)
                 {
                     throw new ArgumentNullException(nameof(user), "Данные пользователя не могут быть null");
@@ -43,24 +43,9 @@ namespace Messenger.Models
                     throw new ArgumentException("Токен сессии не может быть пустым", nameof(user.sessionToken));
                 }
 
-                // Сохраняем токен
                 SaveSessionToken(user.sessionToken);
 
-                // Сохраняем данные пользователя (без пароля)
-                var userDataToSave = new User
-                {
-                    userID = user.userID,
-                    username = user.username,
-                    email = user.email,
-                    isOnline = user.isOnline,
-                    isAccountDeleted = user.isAccountDeleted,
-                    lastTimeOnline = user.lastTimeOnline,
-                    sessionToken = user.sessionToken,
-                    sessionTokenExpirationDate = user.sessionTokenExpirationDate,
-                    userProfilePicturePath = user.userProfilePicturePath
-                };
-
-                string userJson = JsonSerializer.Serialize(userDataToSave);
+                string userJson = JsonSerializer.Serialize(user);
                 byte[] encryptedUserData = ProtectedData.Protect(
                     Encoding.UTF8.GetBytes(userJson),
                     null,
@@ -107,11 +92,7 @@ namespace Messenger.Models
             }
         }
 
-        /// <summary>
-        /// Сохраняет токен сессии
-        /// </summary>
-        /// <param name="token">Токен сессии</param>
-        public static void SaveSessionToken(string token)
+        public void SaveSessionToken(string token)
         {
             try
             {
@@ -293,24 +274,8 @@ namespace Messenger.Models
             }
         }
 
-        /// <summary>
-        /// Проверяет, истек ли токен сессии
-        /// </summary>
-        /// <param name="user">Данные пользователя</param>
-        /// <returns>true, если токен истек</returns>
-        public static bool IsSessionExpired(User user)
-        {
-            if (user == null)
-                return true;
 
-            return DateTime.Now >= user.sessionTokenExpirationDate;
-        }
-
-        /// <summary>
-        /// Обновляет сохраненную сессию новыми данными
-        /// </summary>
-        /// <param name="user">Обновленные данные пользователя</param>
-        public static void UpdateSession(User user)
+        public void UpdateSession(User user)
         {
             if (user == null || string.IsNullOrWhiteSpace(user.sessionToken))
             {
@@ -328,18 +293,5 @@ namespace Messenger.Models
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
             return new HttpClient(clientHandler);
         }
-    }
-
-    // Класс для ответа от сервера при аутентификации
-    public class ResponseLogin
-    {
-        public string status { get; set; }
-        public ResponseData data { get; set; }
-        public string error { get; set; }
-    }
-
-    public class ResponseData
-    {
-        public User user { get; set; }
     }
 }

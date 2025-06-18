@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using Messenger.Models;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 
@@ -10,7 +11,7 @@ namespace Messenger
     public partial class App : Application
     {
         public static string CurrentSessionToken { get; set; }
-        public static Login.User CurrentUser { get; set; }
+        public static User CurrentUser { get; set; }
     }
 
 }

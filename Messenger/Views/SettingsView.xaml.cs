@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Messenger.Dtos.ResponseDto;
+using Messenger.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +29,6 @@ namespace Messenger.Views
             InitializeComponent();
             InitializeHttpClient();
             tbChangeUsername.Text = App.CurrentUser.username;
-            tbChangeEmail.Text = App.CurrentUser.email;
         }
         private void InitializeHttpClient()
         {
@@ -100,7 +101,7 @@ namespace Messenger.Views
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var responseData = JsonConvert.DeserializeObject<ServerUserResponse>(responseContent);
+                    var responseData = JsonConvert.DeserializeObject<ApiResponse<UserResponseDto>>(responseContent);
 
                     if (responseData.status == "success")
                     {
@@ -159,7 +160,7 @@ namespace Messenger.Views
                     if (response.IsSuccessStatusCode)
                     {
                         var responseContent = await response.Content.ReadAsStringAsync();
-                        var responseData = JsonConvert.DeserializeObject<ServerUserResponse>(responseContent);
+                        var responseData = JsonConvert.DeserializeObject<ApiResponse<UserResponseDto>>(responseContent);
 
                         if (responseData.status == "success")
                         {
@@ -188,67 +189,6 @@ namespace Messenger.Views
             }
         }
 
-        private void btChangeEmail_Click(object sender, RoutedEventArgs e)
-        {
-            ChangeEmail();
-        }
-        private async void ChangeEmail()
-        {
-            if (!string.IsNullOrWhiteSpace(tbChangeEmail.Text))
-            {
-
-                try
-                {
-                    var requestData = new
-                    {
-                        SessionToken = App.CurrentSessionToken,
-                        NewEmail = tbChangeEmail.Text,
-                    };
-
-                    var json = JsonConvert.SerializeObject(requestData);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                    var request = new HttpRequestMessage
-                    {
-                        Method = HttpMethod.Put,
-                        RequestUri = new Uri(httpClient.BaseAddress + "User/change-user-email"),
-                        Content = content
-                    };
-
-                    var response = await httpClient.SendAsync(request);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var responseContent = await response.Content.ReadAsStringAsync();
-                        var responseData = JsonConvert.DeserializeObject<ServerUserResponse>(responseContent);
-
-                        if (responseData.status == "success")
-                        {
-                            tbChangeEmail.Text = responseData.data.user.email;
-                            MessageBox.Show("username changed successfully");
-                        }
-                        else
-                        {
-                            MessageBox.Show($"Error: {responseData.error}");
-                        }
-                    }
-                    else
-                    {
-                        var errorContent = await response.Content.ReadAsStringAsync();
-                        MessageBox.Show($"Error: {errorContent}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error: {ex.Message}");
-                }
-
-            }
-            else
-            {
-                MessageBox.Show("empty email");
-            }
-        }
         private void btChangePassword_Click(object sender, RoutedEventArgs e)
         {
             ChangePassword();
@@ -280,7 +220,7 @@ namespace Messenger.Views
                     if (response.IsSuccessStatusCode)
                     {
                         var responseContent = await response.Content.ReadAsStringAsync();
-                        var responseData = JsonConvert.DeserializeObject<ServerUserResponse>(responseContent);
+                        var responseData = JsonConvert.DeserializeObject<ApiResponse<UserResponseDto>>(responseContent);
 
                         if (responseData.status == "success")
                         {
@@ -307,29 +247,6 @@ namespace Messenger.Views
             {
                 MessageBox.Show("passwords dont match");
             }
-        }
-        public class ServerUserResponse
-        {
-            public string status { get; set; }
-            public UserInfo data { get; set; }
-            public string error { get; set; }
-        }
-        public class UserInfo
-        {
-            public User user { get; set; }
-        }
-        public class User
-        {
-            public int userID { get; set; }
-            public string username { get; set; }
-            public string password { get; set; }
-            public string email { get; set; }
-            public bool isOnline { get; set; }
-            public bool isAccountDeleted { get; set; }
-            public DateTime lastTimeOnline { get; set; }
-            public string sessionToken { get; set; }
-            public DateTime sessionTokenExpirationDate { get; set; }
-            public string UserProfilePicturePath { get; set; }
         }
     }
 }

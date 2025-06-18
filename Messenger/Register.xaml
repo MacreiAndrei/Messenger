@@ -69,8 +69,8 @@
             </Setter>
         </Style>
 
-        <!-- Style pentru Login button -->
-        <Style x:Key="LoginButtonStyle" TargetType="Button">
+        <!-- Style pentru Register button -->
+        <Style x:Key="RegisterButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="50"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -96,8 +96,8 @@
             </Setter>
         </Style>
 
-        <!-- Style pentru Register button -->
-        <Style x:Key="RegisterButtonStyle" TargetType="Button">
+        <!-- Style pentru Login button -->
+        <Style x:Key="LoginButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="50"/>
             <Setter Property="Background">
                 <Setter.Value>
@@ -142,7 +142,7 @@
         <!-- Background gradient -->
         <Rectangle Fill="{StaticResource MainGradient}" Margin="0"/>
 
-        <!-- Decorative wave shape -->
+        <!-- Decorative wave shape - exact ca în imagine -->
         <Path Fill="White" 
               Opacity="0.4" 
               Stretch="Fill"
@@ -150,11 +150,11 @@
               Height="220"
               Data="M0,50 Q200,10 400,40 T800,30 Q850,35 900,25 L900,160 Q700,120 500,140 T100,160 Q50,165 0,170 Z"/>
 
-        <!-- Main register card container -->
+        <!-- Main login card container -->
         <Border Background="White"
                 CornerRadius="25"
                 Width="450"
-                Height="500"
+                Height="420"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="0,40,0,0">
@@ -170,10 +170,6 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="30"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="25"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="Auto"/>
@@ -225,49 +221,15 @@
                     </Viewbox>
                 </Grid>
 
-                <!-- Email Label -->
-                <TextBlock Grid.Row="4"
-                           Text="Email"
-                           FontSize="13"
-                           Foreground="#FF888888"
-                           Margin="0,0,0,5"/>
-
-                <!-- Email input with icon -->
-                <Grid Grid.Row="4" Margin="0,20,0,0">
-                    <TextBox x:Name="EmailTextBox"
-                             Style="{StaticResource InputTextBox}"
-                             Text=""
-                             HorizontalContentAlignment="Left"/>
-                    <TextBlock x:Name="EmailPlaceholder"
-                               Text="Enter Email Adres..."
-                               Foreground="#FFAAAAAA"
-                               Margin="45,0,15,0"
-                               VerticalAlignment="Center"
-                               IsHitTestVisible="False"
-                               HorizontalAlignment="Left"
-                               Visibility="Visible"/>
-
-                    <!-- Icon -->
-                    <Viewbox Width="18" Height="18"
-                             HorizontalAlignment="Left"
-                             VerticalAlignment="Center"
-                             Margin="15,0,0,0">
-                        <Canvas Width="24" Height="24">
-                            <Path Fill="#FFAAAAAA"
-                                  Data="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/>
-                        </Canvas>
-                    </Viewbox>
-                </Grid>
-
                 <!-- Password Label -->
-                <TextBlock Grid.Row="6"
+                <TextBlock Grid.Row="4"
                            Text="Password"
                            FontSize="13"
                            Foreground="#FF888888"
                            Margin="0,0,0,5"/>
 
                 <!-- Password input with icon -->
-                <Grid Grid.Row="6" Margin="0,20,0,0">
+                <Grid Grid.Row="4" Margin="0,20,0,0">
                     <PasswordBox x:Name="PasswordBox"
                                  Style="{StaticResource InputPasswordBox}"
                                  HorizontalContentAlignment="Left"/>
@@ -293,17 +255,17 @@
                 </Grid>
 
                 <!-- Buttons row -->
-                <Grid Grid.Row="8">
+                <Grid Grid.Row="6">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="15"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Login button -->
+                    <!-- Register button - IMPORTANT: Added Click event handler here -->
                     <Button Grid.Column="0"
-                            Style="{StaticResource LoginButtonStyle}"
                             x:Name="LoginButton"
+                            Style="{StaticResource RegisterButtonStyle}"
                             Click="LoginButton_Click">
                         <StackPanel Orientation="Horizontal">
                             <Viewbox Width="16" Height="16" Margin="0,0,8,0">
@@ -316,11 +278,11 @@
                         </StackPanel>
                     </Button>
 
-                    <!-- Register button -->
+                    <!-- Login button -->
                     <Button Grid.Column="2"
-                            Style="{StaticResource RegisterButtonStyle}"
                             x:Name="RegisterButton"
-                            Click="Register_Click">
+                            Click="Register_Click"
+                            Style="{StaticResource LoginButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <Viewbox Width="16" Height="16" Margin="0,0,8,0">
                                 <Canvas Width="24" Height="24">
@@ -334,14 +296,14 @@
                 </Grid>
 
                 <!-- Footer text -->
-                <StackPanel Grid.Row="12" 
+                <StackPanel Grid.Row="8" 
                             Orientation="Horizontal" 
                             HorizontalAlignment="Center"
                             Margin="0,15,0,0">
-                    <TextBlock Text="Did Not Recive Code? " 
+                    <TextBlock Text="Did You Receive Code? " 
                                FontSize="13"
                                Foreground="#FF999999"/>
-                    <TextBlock Text="TryAgain" 
+                    <TextBlock Text="Try Again" 
                                FontSize="13"
                                Foreground="#FF8A2BE2"
                                Cursor="Hand">

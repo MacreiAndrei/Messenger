@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Messenger.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
@@ -278,12 +279,8 @@ namespace Messenger
                 // Логируем ответ от сервера
                 System.Diagnostics.Debug.WriteLine($"Login response: {jsonResponse}");
 
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = false
-                };
 
-                ResponseLogin response = JsonSerializer.Deserialize<ResponseLogin>(jsonResponse, options);
+                ResponseLogin? response = JsonSerializer.Deserialize<ResponseLogin>(jsonResponse);
 
                 if (response == null)
                 {
@@ -291,8 +288,9 @@ namespace Messenger
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
+            System.Diagnostics.Debug.WriteLine($"Login response: {response.data.user}");
 
-                if (response.status == "success" && response.data?.user != null)
+            if (response.status == "success" && response.data?.user != null)
                 {
                     var userData = response.data.user;
 
@@ -409,21 +407,6 @@ namespace Messenger
         public class ResponseData
         {
             public User user { get; set; }
-        }
-
-        // Your existing User class remains the same
-        public class User
-        {
-            public int userID { get; set; }
-            public string username { get; set; }
-            public string password { get; set; }
-            public string email { get; set; }
-            public bool isOnline { get; set; }
-            public bool isAccountDeleted { get; set; }
-            public DateTime lastTimeOnline { get; set; }
-            public string sessionToken { get; set; }
-            public DateTime sessionTokenExpirationDate { get; set; }
-            public string userProfilePicturePath { get; set; }
         }
     }
 }

@@ -9,7 +9,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Messenger.Models;
+using Messenger.Dtos;
+using Messenger.Views;
 
 namespace Messenger
 {
@@ -27,7 +28,7 @@ namespace Messenger
             _userToken = userToken;
             _username = username;
                 tbUserName.Text = App.CurrentUser.username[0].ToString();
-            SetActiveButton(HomeButton);
+            SetActiveButton(ChatButton);
             ShowView("Chat");
         }
 
@@ -67,16 +68,20 @@ namespace Messenger
 
             if (result == MessageBoxResult.Yes)
             {
-                SessionManager.LogoutAndRedirectToLogin();
+                SessionManager.ClearSession();
+                Login login = new Login();
+                login.Show();
+                ChatView.messagePollingTimer.Stop();
+                this.Close();
             }
         }
 
         private void ShowView(string viewName)
         {
-            UserControl view = viewName switch
+            UserControl? view = viewName switch
             {
                 "Home" => new Views.HomeView(),
-                "Chat" => new Views.ChatView(_userToken, _username),
+                "Chat" => new Views.ChatView(),
                 "Notifications" => new Views.NotificationsView(),
                 "Settings" => new Views.SettingsView(),
                 _ => null

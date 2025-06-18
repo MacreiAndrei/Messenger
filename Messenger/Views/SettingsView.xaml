@@ -389,17 +389,7 @@
 
                                 <TextBlock Text="Email" FontSize="14" FontWeight="Medium"
                                            Foreground="#6B7280" Margin="0,0,0,6"/>
-                                <DockPanel>
-                                    <Button x:Name="btChangeEmail" Click="btChangeEmail_Click" DockPanel.Dock="Right" Content="Save" 
-                                        Style="{StaticResource PrimaryButtonStyle}"
-                                        Padding="18,10" 
-                                        FontSize="14"
-                                        Margin="16,0,0,16"/>
-                                    <TextBox x:Name="tbChangeEmail"
-                                         Style="{StaticResource ModernTextBoxStyle}"
-                                         FontSize="16" FontWeight="SemiBold" 
-                                         Margin="0,0,0,16"/>
-                                </DockPanel>
+                                
 
                                 <Button Content="📷 Schimbă poza de profil" 
                                         Style="{StaticResource SecondaryButtonStyle}"

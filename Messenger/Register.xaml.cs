@@ -1,4 +1,7 @@
-﻿using Messenger.Views;
+﻿using Messenger.Dtos;
+using Messenger.Dtos.ResponseDto;
+using Messenger.Models;
+using Messenger.Views;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -26,22 +29,15 @@ namespace Messenger
     public partial class Register : Window
     {
         private HttpClient httpClient;
-        private const string TOKEN_FILE_NAME = "session_token.dat";
-        private string tokenFilePath;
+        public static SessionManager _sessionManager;
 
         public Register()
         {
             InitializeComponent();
             InitializeHttpClient();
+            _sessionManager = new SessionManager();
             NameTextBox.TextChanged += NameTextBox_TextChanged;
-            EmailTextBox.TextChanged += EmailTextBox_TextChanged;
             PasswordBox.PasswordChanged += PasswordBox_PasswordChanged;
-
-            // Add click handler for the Login button
-            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string appFolder = System.IO.Path.Combine(appDataPath, "Messenger");
-            Directory.CreateDirectory(appFolder);
-            tokenFilePath = System.IO.Path.Combine(appFolder, TOKEN_FILE_NAME);
         }
         private void InitializeHttpClient()
         {
@@ -62,12 +58,6 @@ namespace Messenger
                 : Visibility.Collapsed;
         }
 
-        private void EmailTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            EmailPlaceholder.Visibility = string.IsNullOrWhiteSpace(EmailTextBox.Text)
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-        }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
@@ -92,15 +82,13 @@ namespace Messenger
         }
         private async void Registration()
         {
-            if (!string.IsNullOrWhiteSpace(NameTextBox.Text) && !string.IsNullOrWhiteSpace(EmailTextBox.Text) && !string.IsNullOrWhiteSpace(PasswordBox.Password))
+            if (!string.IsNullOrWhiteSpace(NameTextBox.Text) && !string.IsNullOrWhiteSpace(PasswordBox.Password))
             {
-                try
-                {
+
                     var requestData = new
                     {
                         Username = NameTextBox.Text,
                         Password = PasswordBox.Password,
-                        Email = EmailTextBox.Text
                     };
 
                     var json = JsonConvert.SerializeObject(requestData);
@@ -109,7 +97,7 @@ namespace Messenger
                     var jsonResponse = await httpClient.PostAsync("Autentification/register", content);
                     var responseContent = await jsonResponse.Content.ReadAsStringAsync();
 
-                    ResponseLogin response = JsonConvert.DeserializeObject<ResponseLogin>(responseContent);
+                    ApiResponse<UserResponseDto> response = JsonConvert.DeserializeObject<ApiResponse<UserResponseDto>>(responseContent);
 
 
                     if (response == null)
@@ -131,12 +119,12 @@ namespace Messenger
                         }
 
                         App.CurrentSessionToken = userData.sessionToken;
+                        App.CurrentUser = userData;
 
                         SaveSessionToken(userData.sessionToken);
 
                         MessageBox.Show($"Login reușit! Bun venit, {NameTextBox.Text}!", "Succes",
                             MessageBoxButton.OK, MessageBoxImage.Information);
-
                         // Open MainWindow
                         MainWindow mainWindow = new MainWindow(userData.sessionToken, userData.username);
                         mainWindow.Show();
@@ -154,67 +142,12 @@ namespace Messenger
                     }
                     this.Close();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Eroare neașteptată: {ex.Message}", "Eroare",
-                   MessageBoxButton.OK, MessageBoxImage.Error);
-                    System.Diagnostics.Debug.WriteLine($"Unexpected error in LoginButton_Click: {ex}");
-                }
-            }
-        }
-        private void SaveSessionToken(string token)
-        {
-            try
-            {
-                // Проверяем токен перед сохранением
-                if (string.IsNullOrWhiteSpace(token))
-                {
-                    System.Diagnostics.Debug.WriteLine("SaveSessionToken: Attempted to save null or empty token");
-                    throw new ArgumentException("Токен сессии не может быть пустым", nameof(token));
-                }
 
-                // Encrypt token before saving (optional but recommended)
-                byte[] encryptedToken = ProtectedData.Protect(
-                    Encoding.UTF8.GetBytes(token),
-                    null,
-                    DataProtectionScope.CurrentUser);
-
-                File.WriteAllBytes(tokenFilePath, encryptedToken);
-                System.Diagnostics.Debug.WriteLine($"Session token saved successfully. Length: {token.Length}");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error saving session token: {ex.Message}");
-                MessageBox.Show($"Не удалось сохранить токен сессии: {ex.Message}", "Предупреждение",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            
         }
-        public class ResponseLogin
+        private async Task SaveSessionToken(string token)
         {
-            public string status { get; set; }
-            public ResponseData data { get; set; }
-            public string error { get; set; }
-        }
-
-        // New wrapper class for the data
-        public class ResponseData
-        {
-            public User user { get; set; }
-        }
-
-        // Your existing User class remains the same
-        public class User
-        {
-            public int userID { get; set; }
-            public string username { get; set; }
-            public string password { get; set; }
-            public string email { get; set; }
-            public bool isOnline { get; set; }
-            public bool isAccountDeleted { get; set; }
-            public DateTime lastTimeOnline { get; set; }
-            public string sessionToken { get; set; }
-            public DateTime sessionTokenExpirationDate { get; set; }
-            public string userProfilePicturePath { get; set; }
+            _sessionManager.SaveSessionToken(token);
         }
     }
 }
