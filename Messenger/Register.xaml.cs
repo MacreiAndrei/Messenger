@@ -124,7 +124,7 @@ namespace Messenger
 
                         SaveSessionToken(userData.sessionToken);
 
-                        MessageBox.Show($"Login reușit! Bun venit, {NameTextBox.Text}!", "Succes",
+                        MessageBox.Show($"Registrarea reușita! Bun venit, {NameTextBox.Text}!", "Succes",
                             MessageBoxButton.OK, MessageBoxImage.Information);
                         // Open MainWindow
                         MainWindow mainWindow = new MainWindow(userData.sessionToken, userData.username);
@@ -133,7 +133,7 @@ namespace Messenger
                     }
                     else if (response.status == "error")
                     {
-                        MessageBox.Show($"Eroare la autentificare: {response.error}", "Eroare",
+                        MessageBox.Show($"Eroare la registrarea: {response.error}", "Eroare",
                             MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
@@ -141,7 +141,6 @@ namespace Messenger
                         MessageBox.Show("Răspuns necunoscut de la server.", "Eroare",
                             MessageBoxButton.OK, MessageBoxImage.Error);
                     }
-                    this.Close();
                 }
                 catch (Exception ex)
                 {

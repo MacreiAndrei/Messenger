@@ -288,7 +288,6 @@ namespace Messenger
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-            System.Diagnostics.Debug.WriteLine($"Login response: {response.data.user}");
 
             if (response.status == "success" && response.data?.user != null)
                 {
@@ -327,6 +326,8 @@ namespace Messenger
                     MessageBox.Show("Răspuns necunoscut de la server.", "Eroare",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+            LoginButton.IsEnabled = true;
+            LoginButton.Content = "Login";
 
         }
 
