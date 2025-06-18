@@ -1,4 +1,5 @@
-﻿using Messenger.Dtos.ResponseDto;
+﻿using Messenger.Dtos;
+using Messenger.Dtos.ResponseDto;
 using Messenger.Models;
 using System.Diagnostics;
 using System.Net.Http;
@@ -205,7 +206,7 @@ namespace Messenger.Views
         {
             try
             {
-                var requestData = new MessageType2
+                var requestData = new
                 {
                     SessionToken = App.CurrentSessionToken,
                     ChatID = chatId
@@ -234,7 +235,7 @@ namespace Messenger.Views
         {
             try
             {
-                var requestData = new MessageType2
+                var requestData = new
                 {
                     SessionToken = App.CurrentSessionToken,
                     ChatID = currentChatId
@@ -276,7 +277,7 @@ namespace Messenger.Views
         {
             try
             {
-                var requestData = new MessageType2
+                var requestData = new 
                 {
                     SessionToken = App.CurrentSessionToken,
                     ChatID = currentChatId
@@ -325,7 +326,7 @@ namespace Messenger.Views
         {
             try
             {
-                var requestData = new MessageType2
+                var requestData = new 
                 {
                     SessionToken = App.CurrentSessionToken,
                     ChatID = currentChatId
@@ -828,11 +829,5 @@ namespace Messenger.Views
         {
             return JsonSerializer.Deserialize<ApiResponse<T>>(response);
         }
-    }
-
-    public class MessageType2
-    {
-        public string SessionToken { get; set; }
-        public string ChatID { get; set; }
     }
 }

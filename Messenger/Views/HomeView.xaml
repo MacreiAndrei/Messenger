@@ -45,7 +45,7 @@
         <Border Grid.Row="0" Background="White" Padding="30,20" 
                 BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
             <StackPanel>
-                <TextBlock Text="Bine ai venit în Messenger!" 
+                <TextBlock Text="Bine ai venit în Голубъ!" 
                            FontSize="32" FontWeight="Bold" 
                            Foreground="#1F2937" Margin="0,0,0,10"/>
                 <TextBlock Text="Rămii conectat cu prietenii și familia ta" 

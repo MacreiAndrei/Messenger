@@ -9,7 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Messenger.Dtos;
+using Messenger.Models;
 using Messenger.Views;
 
 namespace Messenger
@@ -133,6 +133,14 @@ namespace Messenger
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState= WindowState.Minimized;
+        }
+
+        private void Sidebar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
     }
 }

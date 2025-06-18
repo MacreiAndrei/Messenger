@@ -84,7 +84,8 @@ namespace Messenger
         {
             if (!string.IsNullOrWhiteSpace(NameTextBox.Text) && !string.IsNullOrWhiteSpace(PasswordBox.Password))
             {
-
+                try
+                {
                     var requestData = new
                     {
                         Username = NameTextBox.Text,
@@ -142,8 +143,17 @@ namespace Messenger
                     }
                     this.Close();
                 }
-
-            
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Eroare neașteptată: {ex.Message}", "Eroare",
+                   MessageBoxButton.OK, MessageBoxImage.Error);
+                    System.Diagnostics.Debug.WriteLine($"Unexpected error in LoginButton_Click: {ex}");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Username and password must not be empty.");
+            }
         }
         private async Task SaveSessionToken(string token)
         {

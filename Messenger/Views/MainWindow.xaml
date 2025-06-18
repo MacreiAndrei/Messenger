@@ -188,7 +188,8 @@
             </Grid.ColumnDefinitions>
 
             <!-- Sidebar cu gradient îmbunătățit -->
-            <Border Grid.Column="0" CornerRadius="20,0,0,20">
+            <Border Grid.Column="0" CornerRadius="20,0,0,20"
+                    MouseLeftButtonDown="Sidebar_MouseLeftButtonDown">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Color="#667EEA" Offset="0"/>
