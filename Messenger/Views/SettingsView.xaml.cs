@@ -105,12 +105,11 @@ namespace Messenger.Views
 
                     if (responseData.status == "success")
                     {
-                        MessageBox.Show(
-                            "Contul a fost șters. Aplicația se va închide.",
-                            "Cont șters",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Information
-                        );
+                        Window window = Window.GetWindow(this);
+                        if (window != null)
+                        {
+                            window.Close();
+                        }
                     }
                     else
                     {
