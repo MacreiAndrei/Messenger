@@ -7,8 +7,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using static Messenger.Login;
 using System.Windows;
+using Messenger.Models;
 
-namespace Messenger.Models
+namespace Messenger
 {
     public class SessionManager
     {

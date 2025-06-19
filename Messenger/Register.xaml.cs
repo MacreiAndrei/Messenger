@@ -1,6 +1,5 @@
 ﻿using Messenger.Dtos;
 using Messenger.Dtos.ResponseDto;
-using Messenger.Models;
 using Messenger.Views;
 using Newtonsoft.Json;
 using System;
