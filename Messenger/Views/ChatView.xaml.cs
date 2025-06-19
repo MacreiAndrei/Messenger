@@ -686,6 +686,15 @@ namespace Messenger.Views
             _isRenameChat = false;
             SearchTextBox.Text = "Add user to chat chat...";
         }
+
+        private void btNewChat_Click(object sender, RoutedEventArgs e)
+        {
+            _isChatCreate = true;
+            _isAddUser = false;
+            _isRenameChat = false;
+            SearchTextBox.Text = "Create new chat...";
+        }
+
         public async void AddUserToChat()
         {
             try
@@ -723,7 +732,17 @@ namespace Messenger.Views
 
         private void dtDeleteChat_Click(object sender, RoutedEventArgs e)
         {
-            DeleteChat();
+            var confirmation = MessageBox.Show(
+                "Confirmare: Ștergi Chat?",
+                "Confirmare",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Stop
+            );
+
+            if (confirmation == MessageBoxResult.Yes)
+            {
+                DeleteChat();
+            }
         }
         private async void DeleteChat()
         {
@@ -829,5 +848,7 @@ namespace Messenger.Views
         {
             return JsonSerializer.Deserialize<ApiResponse<T>>(response);
         }
+
+
     }
 }
